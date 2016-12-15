@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Carteira Simples</string>
+    <string name="instructions">Adicione um valor para computar gastos/receitas</string>
+    <string name="edit_text_hint">Escreva aqui</string>
+    <string name="button_send">Salvar</string>
+    <string name="button_view">Visualizar</string>
+    <string name="wallet_view_title">Valores Registrados</string>
+    <string name="income">Receita</string>
+    <string name="outcome">Gasto</string>
+    <string name="added">Adicionou </string>
+    <string name="invalid_input">Valor inválido</string>
+</resources>
