@@ -8,16 +8,23 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".InsertValues">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity
+            android:name=".InsertValues"
+            android:label="@string/insert_value_label">
         </activity>
         <activity
             android:name=".ViewValues"
-            android:label="@string/wallet_view_title"></activity>
+            android:label="@string/wallet_view_title" />
+        <activity
+            android:name=".Overview"
+            android:label="@string/overview_label">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>

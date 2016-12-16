@@ -26,6 +26,9 @@ public class InsertValues extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert_value);
 
+        // Now InsertValues is called from Overview
+        Intent fromInsertValues = getIntent();
+
         // Iniciate categories spinner
         categories = (Spinner) findViewById(R.id.choose_category);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,

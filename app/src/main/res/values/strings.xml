@@ -1,14 +1,17 @@
 <resources>
     <string name="app_name">Simple Wallet</string>
+    <string name="insert_value_label">Inserting a value</string>
+    <string name="overview_label">Simple Wallet App</string>
+    <string name="wallet_view_title">Registered Values</string>
     <string name="instructions">Add a value to compute incomes/outcomes</string>
     <string name="edit_text_hint">Write here</string>
     <string name="button_send">Save</string>
     <string name="button_view">View</string>
-    <string name="wallet_view_title">Registered Values</string>
+    <string name="button_date">Date </string>
+    <string name="button_add_value">Add</string>
     <string name="income">Income</string>
     <string name="outcome">Outcome</string>
     <string name="added">Added </string>
-    <string name="button_date">Date </string>
     <string name="no_date_input">No date selected</string>
     <string name="invalid_input">Invalid input</string>
     <string-array name="category_tipes">
