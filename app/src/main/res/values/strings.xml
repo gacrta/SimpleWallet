@@ -9,6 +9,7 @@
     <string name="outcome">Outcome</string>
     <string name="added">Added </string>
     <string name="button_date">Date </string>
+    <string name="no_date_input">No date selected</string>
     <string name="invalid_input">Invalid input</string>
     <string-array name="category_tipes">
         <item>Salary</item>
@@ -18,7 +19,4 @@
         <item>Entertainment</item>
         <item>Credit Card Fee</item>
     </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

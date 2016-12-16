@@ -18,7 +18,9 @@
         android:layout_toStartOf="@+id/botao1"
         android:hint="@string/edit_text_hint"
         android:id="@+id/value_to_add"
-        android:inputType="numberDecimal"/>
+        android:inputType="numberDecimal"
+        android:maxLength="8"/>
+
     <Button
         android:id="@id/botao1"
         android:layout_alignParentEnd="true"
