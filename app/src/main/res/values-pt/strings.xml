@@ -9,4 +9,12 @@
     <string name="outcome">Gasto</string>
     <string name="added">Adicionou </string>
     <string name="invalid_input">Valor inválido</string>
+    <string-array name="category_tipes">
+        <item>Salário</item>
+        <item>Supermercado</item>
+        <item>Gasolina</item>
+        <item>Contas</item>
+        <item>Entertenimento</item>
+        <item>Taxa de Cartão de Crédito</item>
+    </string-array>
 </resources>
