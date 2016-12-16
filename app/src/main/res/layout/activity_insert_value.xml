@@ -28,17 +28,27 @@
         android:text="@string/button_send"
         android:onClick="saveValue"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/value_to_add"
+        android:text="@string/button_date"
+        android:onClick="showDatePickerDialog"
+        android:id="@+id/set_date_button"/>
+
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/choose_category"
         android:layout_below="@id/value_to_add"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentEnd="true"
+        android:layout_alignEnd="@id/set_date_button">
     </Spinner>
     
     <TextView
         android:layout_alignParentStart="true"
-        android:layout_below="@id/choose_category"
+        android:layout_below="@id/set_date_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/show_value_added"/>

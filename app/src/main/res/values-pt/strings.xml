@@ -8,6 +8,7 @@
     <string name="income">Receita</string>
     <string name="outcome">Gasto</string>
     <string name="added">Adicionou </string>
+    <string name="button_date">Data </string>
     <string name="invalid_input">Valor inválido</string>
     <string-array name="category_tipes">
         <item>Salário</item>

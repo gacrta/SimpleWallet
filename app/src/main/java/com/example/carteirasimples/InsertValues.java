@@ -1,10 +1,12 @@
 package com.example.carteirasimples;
 
 import android.content.Intent;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -16,6 +18,7 @@ public class InsertValues extends AppCompatActivity {
     private static String savedValues = "";
     private boolean sign = true;
     Spinner categories;
+    DialogFragment datePicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,7 @@ public class InsertValues extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.category_tipes, android.R.layout.simple_spinner_item);
         categories.setAdapter(adapter);
+        datePicker = new DatePickerFragment();
     }
 
     /* called after user press view button */
@@ -50,7 +54,8 @@ public class InsertValues extends AppCompatActivity {
 
         if (!valueAdded.isEmpty() && !valueAdded.equals("0")) {
             savedValues += signal + valueAdded + "|";
-            String message = getString(R.string.added) + " " + signal + valueAdded;
+            String message = getString(R.string.added) + " " + signal + valueAdded + " em "
+                    + datePicker;
             showValue.setText(message);
         } else {
             showValue.setText(R.string.invalid_input);
@@ -59,6 +64,11 @@ public class InsertValues extends AppCompatActivity {
         //savedValues.add(valueAdded);
 
         valueToAdd.setText("");
+    }
+
+    public void showDatePickerDialog(View view){
+        DatePicker datePicker = 
+        datePicker.show(getSupportFragmentManager(),"datePicker");
     }
 
     /*
