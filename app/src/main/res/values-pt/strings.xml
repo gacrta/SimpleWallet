@@ -15,6 +15,7 @@
     <string name="added">Adicionou </string>
     <string name="no_date_input">Nenhuma data selecionada</string>
     <string name="invalid_input">Valor inválido</string>
+    <string name="sign_image_label">Sinal do valor</string>
     <string-array name="category_tipes">
         <item>Salário</item>
         <item>Supermercado</item>

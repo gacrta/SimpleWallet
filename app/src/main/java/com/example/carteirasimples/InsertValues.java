@@ -59,26 +59,27 @@ public class InsertValues extends AppCompatActivity {
 
     /* called after user press save button */
     public void saveValue(View view) {
-        String signal = "";
+        boolean sign = true;
         //showValue = (TextView) findViewById(R.id.show_value_added);
         EditText valueToAdd = (EditText) findViewById(R.id.value_to_add);
 
+
         // check if value is income or outcome. Only income is first value 'salary'
         if (categories.getSelectedItemPosition() != 0) {
-            signal = "-";
+            sign = false;
         }
+
 
         String valueAdded = valueToAdd.getText().toString();
 
         if (!valueAdded.isEmpty() && !valueAdded.equals("0") && !valueAdded.equals(".")) {
 
-            valueAdded = signal + valueAdded;
             float floatValueAdded = Float.parseFloat(valueAdded);
             TextView dateView = (TextView) findViewById(R.id.show_selected_date);
             String dateOfValue = dateView.getText().toString();
             String selectedCategory = (String) categories.getSelectedItem();
 
-            WalletValue newValue = new WalletValue(floatValueAdded, selectedCategory, dateOfValue);
+            WalletValue newValue = new WalletValue(floatValueAdded, selectedCategory, dateOfValue, sign);
             Overview.valuesAdded.add(newValue);
 
             setResult(Activity.RESULT_OK, fromOverview);

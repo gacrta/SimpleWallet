@@ -8,14 +8,16 @@ public class WalletValue {
     private float value;
     private String category;
     private String date;
+    private boolean sign;   //sign == true represents income
 
     public WalletValue() {
     }
 
-    public WalletValue(float value, String category, String date) {
+    public WalletValue(float value, String category, String date, boolean sign) {
         this.value = value;
         this.category = category;
         this.date = date;
+        this.sign = sign;
     }
 
     public float getValue() {
@@ -26,10 +28,9 @@ public class WalletValue {
         return date;
     }
 
-    public String getCategory() {
+    public String getCategory() { return category; }
 
-        return category;
-    }
+    public boolean getSign() { return sign; }
 
     public void setValue(float value) {
         this.value = value;
@@ -42,4 +43,6 @@ public class WalletValue {
     public void setDate(String date) {
         this.date = date;
     }
+
+    public void setSign(boolean sign) { this.sign = sign; }
 }
