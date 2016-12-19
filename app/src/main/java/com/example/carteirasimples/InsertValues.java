@@ -20,6 +20,7 @@ public class InsertValues extends AppCompatActivity {
     Spinner categories;
     DialogFragment datePicker;
     TextView showValue;
+    TextView showDate;
     Intent fromOverview;
 
     @Override
@@ -37,7 +38,9 @@ public class InsertValues extends AppCompatActivity {
         categories.setAdapter(adapter);
         datePicker = new DatePickerFragment();
         showValue = (TextView) findViewById(R.id.show_add_status);
-        showValue.setText(R.string.no_date_input);
+        showValue.setText("");
+        showDate = (TextView) findViewById(R.id.show_selected_date);
+        showDate.setText(getString(R.string.no_date_input));
     }
 
     /* called after user press cancel button */
