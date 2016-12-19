@@ -4,19 +4,48 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 public class Overview extends AppCompatActivity {
 
     public final static String EXTRA_ADD = "com.example.carteirasimples.ADD";
+    public final static String EXTRA_MESSAGE = "com.example.carteirasimples.MESSAGE";
+    static final int GET_NEW_VALUE = 1; //request code for new value
+    static String valuesAdded = "";
+    TextView textView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
+        textView = (TextView) findViewById(R.id.show_value_added);
     }
 
     public void addValue(View view) {
         Intent callInsertValue = new Intent(this, InsertValues.class);
-        startActivity(callInsertValue);
+        startActivityForResult(callInsertValue, GET_NEW_VALUE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //Check requestCode
+        if (requestCode == GET_NEW_VALUE) {
+            // Check if request was sucessful
+            if (resultCode == RESULT_OK) {
+                String newValue = data.getStringExtra(EXTRA_ADD);
+                valuesAdded += (newValue+"|");
+                String message = getString(R.string.added) + " " + newValue;
+                textView.setText(message);
+            }
+
+        }
+    }
+
+    /* called after user press view button */
+    public void changeToWalletView(View view) {
+        Intent walletViewIntent = new Intent(this, ViewValues.class);
+        walletViewIntent.putExtra(EXTRA_MESSAGE, valuesAdded);
+        startActivity(walletViewIntent);
     }
 
 }

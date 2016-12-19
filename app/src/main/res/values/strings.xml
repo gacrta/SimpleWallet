@@ -6,6 +6,7 @@
     <string name="instructions">Add a value to compute incomes/outcomes</string>
     <string name="edit_text_hint">Write here</string>
     <string name="button_send">Save</string>
+    <string name="button_cancel">Cancel</string>
     <string name="button_view">View</string>
     <string name="button_date">Date </string>
     <string name="button_add_value">Add</string>

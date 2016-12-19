@@ -1,5 +1,6 @@
 package com.example.carteirasimples;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -13,13 +14,13 @@ import android.widget.TextView;
 import java.util.Date;
 
 public class InsertValues extends AppCompatActivity {
-    public final static String EXTRA_MESSAGE = "com.example.carteirasimples.MESSAGE";
     //public List<String> savedValues;
     private static String savedValues = "";
     private boolean sign = true;
     Spinner categories;
     DialogFragment datePicker;
     TextView showValue;
+    Intent fromOverview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,7 @@ public class InsertValues extends AppCompatActivity {
         setContentView(R.layout.activity_insert_value);
 
         // Now InsertValues is called from Overview
-        Intent fromInsertValues = getIntent();
+        fromOverview = getIntent();
 
         // Iniciate categories spinner
         categories = (Spinner) findViewById(R.id.choose_category);
@@ -35,15 +36,14 @@ public class InsertValues extends AppCompatActivity {
                 R.array.category_tipes, android.R.layout.simple_spinner_item);
         categories.setAdapter(adapter);
         datePicker = new DatePickerFragment();
-        showValue = (TextView) findViewById(R.id.show_value_added);
+        showValue = (TextView) findViewById(R.id.show_add_status);
         showValue.setText(R.string.no_date_input);
     }
 
-    /* called after user press view button */
-    public void changeToWalletView(View view) {
-        Intent walletViewIntent = new Intent(this, ViewValues.class);
-        walletViewIntent.putExtra(EXTRA_MESSAGE, savedValues);
-        startActivity(walletViewIntent);
+    /* called after user press cancel button */
+    public void cancelOperation(View view) {
+        setResult(Activity.RESULT_CANCELED, fromOverview);
+        finish();
     }
 
     /* called after user press save button */
@@ -58,22 +58,23 @@ public class InsertValues extends AppCompatActivity {
         }
         String valueAdded = valueToAdd.getText().toString();
 
-        if (!valueAdded.isEmpty() && !valueAdded.equals("0")) {
-            savedValues += signal + valueAdded + "|";
-            String message = getString(R.string.added) + " " + signal + valueAdded;
-            showValue.setText(message);
+        if (!valueAdded.isEmpty() && !valueAdded.equals("0") && !valueAdded.equals(".")) {
+
+            valueAdded = signal + valueAdded;
+
+            fromOverview.putExtra(Overview.EXTRA_ADD, valueAdded);
+            setResult(Activity.RESULT_OK, fromOverview);
+            finish();
+
         } else {
             showValue.setText(R.string.invalid_input);
         }
-
-        //savedValues.add(valueAdded);
 
         valueToAdd.setText("");
     }
 
     public void showDatePickerDialog(View view){
         datePicker.show(getSupportFragmentManager(),"datePicker");
-        Intent date = getIntent();
     }
 
 }

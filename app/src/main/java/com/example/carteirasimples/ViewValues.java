@@ -17,7 +17,7 @@ public class ViewValues extends AppCompatActivity {
         setContentView(R.layout.activity_view_values);
 
         Intent fromInsertValues = getIntent();
-        String message = fromInsertValues.getStringExtra(InsertValues.EXTRA_MESSAGE);
+        String message = fromInsertValues.getStringExtra(Overview.EXTRA_MESSAGE);
         String data[] = message.split(Pattern.quote("|"));
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
