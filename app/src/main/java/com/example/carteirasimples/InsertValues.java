@@ -56,11 +56,15 @@ public class InsertValues extends AppCompatActivity {
         if (categories.getSelectedItemPosition() != 0) {
             signal = "-";
         }
+
         String valueAdded = valueToAdd.getText().toString();
 
         if (!valueAdded.isEmpty() && !valueAdded.equals("0") && !valueAdded.equals(".")) {
 
             valueAdded = signal + valueAdded;
+            float floatValueAdded = Float.parseFloat(valueAdded);
+            TextView dateView = (TextView) findViewById(R.id.)
+            String dateOfValue =
 
             fromOverview.putExtra(Overview.EXTRA_ADD, valueAdded);
             setResult(Activity.RESULT_OK, fromOverview);
