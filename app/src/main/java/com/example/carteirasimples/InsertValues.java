@@ -11,7 +11,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 public class InsertValues extends AppCompatActivity {
     //public List<String> savedValues;
@@ -39,8 +41,15 @@ public class InsertValues extends AppCompatActivity {
         datePicker = new DatePickerFragment();
         showValue = (TextView) findViewById(R.id.show_add_status);
         showValue.setText("");
+
+
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
         showDate = (TextView) findViewById(R.id.show_selected_date);
-        showDate.setText(getString(R.string.no_date_input));
+        showDate.setText(writeDateString(year, month, day));
     }
 
     /* called after user press cancel button */
@@ -66,10 +75,15 @@ public class InsertValues extends AppCompatActivity {
 
             valueAdded = signal + valueAdded;
             float floatValueAdded = Float.parseFloat(valueAdded);
-            TextView dateView = (TextView) findViewById(R.id.)
-            String dateOfValue =
+            TextView dateView = (TextView) findViewById(R.id.show_selected_date);
+            String dateOfValue = dateView.getText().toString();
 
-            fromOverview.putExtra(Overview.EXTRA_ADD, valueAdded);
+            String[] parsedDate = dateOfValue.split(Pattern.quote("/"));
+            int year =  Integer.parseInt(parsedDate[0]);
+            int month = Integer.parseInt(parsedDate[1])-1;
+            int day = Integer.parseInt(parsedDate[2]);
+
+            fromOverview.putExtra(Overview.EXTRA_ADD, (valueAdded+dateOfValue));
             setResult(Activity.RESULT_OK, fromOverview);
             finish();
 
@@ -82,6 +96,13 @@ public class InsertValues extends AppCompatActivity {
 
     public void showDatePickerDialog(View view){
         datePicker.show(getSupportFragmentManager(),"datePicker");
+    }
+
+    String writeDateString(int year, int month, int day) {
+        String strYear = Integer.toString(year);
+        String strMonth = Integer.toString(month+1);
+        String strDay = Integer.toString(day);
+        return strYear+"/"+strMonth+"/"+strDay;
     }
 
 }
