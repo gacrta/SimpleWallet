@@ -42,7 +42,6 @@ public class InsertValues extends AppCompatActivity {
         showValue = (TextView) findViewById(R.id.show_add_status);
         showValue.setText("");
 
-
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
@@ -77,13 +76,11 @@ public class InsertValues extends AppCompatActivity {
             float floatValueAdded = Float.parseFloat(valueAdded);
             TextView dateView = (TextView) findViewById(R.id.show_selected_date);
             String dateOfValue = dateView.getText().toString();
+            String selectedCategory = (String) categories.getSelectedItem();
 
-            String[] parsedDate = dateOfValue.split(Pattern.quote("/"));
-            int year =  Integer.parseInt(parsedDate[0]);
-            int month = Integer.parseInt(parsedDate[1])-1;
-            int day = Integer.parseInt(parsedDate[2]);
+            WalletValue newValue = new WalletValue(floatValueAdded, selectedCategory, dateOfValue);
+            Overview.valuesAdded.add(newValue);
 
-            fromOverview.putExtra(Overview.EXTRA_ADD, (valueAdded+dateOfValue));
             setResult(Activity.RESULT_OK, fromOverview);
             finish();
 
