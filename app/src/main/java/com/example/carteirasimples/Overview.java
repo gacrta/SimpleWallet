@@ -48,12 +48,20 @@ public class Overview extends AppCompatActivity {
         }
     }
 
+    public void addValue() {
+        //Intent callInsertValue = new Intent(this, InsertValues.class);
+        //startActivityForResult(callInsertValue, GET_NEW_VALUE);
+
+        AddValueFragment fragment = new AddValueFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, fragment).commit();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_button:
-                Intent callInsertValue = new Intent(this, InsertValues.class);
-                startActivityForResult(callInsertValue, GET_NEW_VALUE);
+                addValue();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

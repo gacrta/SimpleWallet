@@ -20,12 +20,18 @@
         android:layout_alignParentStart="true"
         android:layout_below="@id/button_to_view_values"/>
 
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragment_container"
+        android:layout_below="@id/show_value_added"/>
+
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/summary_table"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/show_value_added">
+        android:layout_below="@id/fragment_container">
         <TableRow>
             <TextView
                 android:id="@+id/overview_label"
