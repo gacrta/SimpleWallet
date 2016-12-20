@@ -10,8 +10,7 @@ public class WalletValue {
     private String date;
     private boolean sign;   //sign == true represents income
 
-    public WalletValue() {
-    }
+    public WalletValue() { }
 
     public WalletValue(float value, String category, String date, boolean sign) {
         this.value = value;
@@ -24,9 +23,7 @@ public class WalletValue {
         return value;
     }
 
-    public String getDate() {
-        return date;
-    }
+    public String getDate() { return date; }
 
     public String getCategory() { return category; }
 

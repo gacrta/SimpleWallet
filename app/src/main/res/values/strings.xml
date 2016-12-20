@@ -16,6 +16,10 @@
     <string name="no_date_input">No date selected</string>
     <string name="invalid_input">Invalid input</string>
     <string name="sign_image_label">Value\'s sign</string>
+    <string name="overview_table_label">Balance Summary</string>
+    <string name="overview_table_income">Income Value:</string>
+    <string name="overview_table_outcome">Outcome Value:</string>
+    <string name="overview_table_balance">Balance:</string>
     <string-array name="category_tipes">
         <item>Salary</item>
         <item>Supermarket</item>

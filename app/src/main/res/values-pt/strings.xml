@@ -16,6 +16,10 @@
     <string name="no_date_input">Nenhuma data selecionada</string>
     <string name="invalid_input">Valor inválido</string>
     <string name="sign_image_label">Sinal do valor</string>
+    <string name="overview_table_label">Resumo do Saldo</string>
+    <string name="overview_table_income">Receita:</string>
+    <string name="overview_table_outcome">Gastos:</string>
+    <string name="overview_table_balance">Saldo:</string>
     <string-array name="category_tipes">
         <item>Salário</item>
         <item>Supermercado</item>
