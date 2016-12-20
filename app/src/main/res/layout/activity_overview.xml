@@ -6,17 +6,10 @@
     android:layout_height="match_parent">
 
     <Button
+        android:id="@+id/button_to_view_values"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:id="@+id/add_value_button"
-        android:text="@string/button_add_value"
-        android:onClick="addValue"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:text="@string/button_view"
         android:onClick="changeToWalletView"/>
@@ -25,7 +18,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/show_value_added"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/add_value_button"/>
+        android:layout_below="@id/button_to_view_values"/>
 
     <TableLayout
         android:layout_width="match_parent"

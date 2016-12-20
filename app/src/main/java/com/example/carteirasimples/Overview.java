@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,10 +15,7 @@ import java.util.List;
 
 public class Overview extends AppCompatActivity {
 
-    public final static String EXTRA_ADD = "com.example.carteirasimples.ADD";
-    public final static String EXTRA_MESSAGE = "com.example.carteirasimples.MESSAGE";
     static final int GET_NEW_VALUE = 1; //request code for new value
-    //static String valuesAdded = "";
     static List<WalletValue> valuesAdded;
     TextView textView;
 
@@ -25,11 +25,6 @@ public class Overview extends AppCompatActivity {
         setContentView(R.layout.activity_overview);
         textView = (TextView) findViewById(R.id.show_value_added);
         valuesAdded = new ArrayList<WalletValue>();
-    }
-
-    public void addValue(View view) {
-        Intent callInsertValue = new Intent(this, InsertValues.class);
-        startActivityForResult(callInsertValue, GET_NEW_VALUE);
     }
 
     @Override
@@ -51,6 +46,26 @@ public class Overview extends AppCompatActivity {
         else {
             tv_balance.setTextColor(Color.parseColor("#74ba48"));
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_add_button:
+                Intent callInsertValue = new Intent(this, InsertValues.class);
+                startActivityForResult(callInsertValue, GET_NEW_VALUE);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     @Override
@@ -102,10 +117,4 @@ public class Overview extends AppCompatActivity {
         }
         return sum;
     }
-
-    // function to evaluate balance
-    public float getBalance() {
-        return getIncomeSum() - getOutcomeSum();
-    }
-
 }

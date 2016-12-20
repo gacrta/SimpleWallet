@@ -9,7 +9,7 @@
     <string name="button_cancel">Cancel</string>
     <string name="button_view">View</string>
     <string name="button_date">Date </string>
-    <string name="button_add_value">Add</string>
+    <string name="menu_add_button_label">Add new value</string>
     <string name="income">Income</string>
     <string name="outcome">Outcome</string>
     <string name="added">Added </string>
