@@ -10,29 +10,29 @@ import java.util.regex.Pattern;
 
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-    InsertValues callerActivity;
+    AddValueFragment callerActivity;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // get caller activity
-        callerActivity = (InsertValues) getActivity();
-        String dateFromTextView = callerActivity.showDate.getText().toString();
+        callerActivity = (AddValueFragment) getFragmentManager().findFragmentByTag(getString(R.string.add_value_fragment_tag));
+        String dateFromTextView = callerActivity.selectedDate.getText().toString();
         String[] parsedDate = dateFromTextView.split(Pattern.quote("/"));
 
         int year =  Integer.parseInt(parsedDate[0]);
         int month = Integer.parseInt(parsedDate[1])-1;
         int day = Integer.parseInt(parsedDate[2]);
 
-        return new DatePickerDialog(getActivity(), this, year, month, day);
+        return new DatePickerDialog(getContext(), this, year, month, day);
     }
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         String date = callerActivity.writeDateString(year, month, day);
 
-        callerActivity.showDate.setText(date);
+        callerActivity.selectedDate.setText(date);
     }
 
 }

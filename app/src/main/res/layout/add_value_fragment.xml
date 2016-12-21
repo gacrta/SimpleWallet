@@ -5,69 +5,51 @@
     tools:context="com.example.carteirasimples.AddValueFragment">
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/add_value_tv_instructions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/instructions"/>
 
     <EditText
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textView1"
+        android:layout_below="@id/add_value_tv_instructions"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/botao1"
         android:hint="@string/edit_text_hint"
-        android:id="@+id/value_to_add"
+        android:id="@+id/add_value_et"
         android:inputType="numberDecimal"
         android:maxLength="8"/>
 
-    <Button
-        android:id="@id/botao1"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/textView1"
+    <TextView
+        android:id="@+id/add_value_tv_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/button_send"
-        android:onClick="saveValue"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/value_to_add"
-        android:text="@string/button_date"
-        android:onClick="showDatePickerDialog"
-        android:id="@+id/set_date_button"/>
+        android:layout_toStartOf="@+id/add_value_spinner_category"
+        android:layout_below="@id/add_value_et"
+        android:text="@string/category"/>
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/choose_category"
-        android:layout_below="@id/value_to_add"
-        android:layout_alignParentEnd="true"
-        android:layout_alignEnd="@id/set_date_button">
+        android:id="@id/add_value_spinner_category"
+        android:layout_below="@id/add_value_et"
+        android:layout_alignParentEnd="true">
     </Spinner>
 
-    <TextView
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/show_selected_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/show_add_status"/>
-
-    <TextView
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/set_date_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@id/show_selected_date"/>
-
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:text="@string/button_cancel"
-        android:onClick="cancelOperation"/>
+        android:layout_below="@id/add_value_tv_category"
+        android:text="@string/button_date"
+        android:onClick="showDatePickerDialog"
+        android:id="@+id/add_value_button_date"/>
+
+    <TextView
+        android:layout_below="@id/add_value_spinner_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/add_value_button_date"
+        android:id="@+id/add_value_tv_show_selected_date"/>
 
 </RelativeLayout>

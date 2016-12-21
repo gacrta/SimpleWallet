@@ -4,6 +4,7 @@
     <string name="overview_label">Simple Wallet App</string>
     <string name="wallet_view_title">Registered Values</string>
     <string name="instructions">Add a value to compute incomes/outcomes</string>
+    <string name="category">Category: </string>
     <string name="edit_text_hint">Write here</string>
     <string name="button_send">Save</string>
     <string name="button_cancel">Cancel</string>
@@ -12,7 +13,7 @@
     <string name="menu_add_button_label">Add new value</string>
     <string name="income">Income</string>
     <string name="outcome">Outcome</string>
-    <string name="added">Added </string>
+    <string name="added">Value added!</string>
     <string name="no_date_input">No date selected</string>
     <string name="invalid_input">Invalid input</string>
     <string name="sign_image_label">Value\'s sign</string>
@@ -20,6 +21,8 @@
     <string name="overview_table_income">Income Value:</string>
     <string name="overview_table_outcome">Outcome Value:</string>
     <string name="overview_table_balance">Balance:</string>
+    <string name="add_value_fragment_tag">AddValueFragment</string>
+    <string name="date_picker_fragment_tag">DatePickerFragment</string>
     <string-array name="category_tipes">
         <item>Salary</item>
         <item>Supermarket</item>

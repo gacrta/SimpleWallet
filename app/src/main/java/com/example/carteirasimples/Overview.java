@@ -2,6 +2,7 @@ package com.example.carteirasimples;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,7 +14,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Overview extends AppCompatActivity {
+public class Overview extends AppCompatActivity implements AddValueFragment.AddValueListener {
 
     static final int GET_NEW_VALUE = 1; //request code for new value
     static List<WalletValue> valuesAdded;
@@ -28,8 +29,8 @@ public class Overview extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart () {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         float income = getIncomeSum();
         float outcome = getOutcomeSum();
         float balance = income - outcome;
@@ -49,12 +50,8 @@ public class Overview extends AppCompatActivity {
     }
 
     public void addValue() {
-        //Intent callInsertValue = new Intent(this, InsertValues.class);
-        //startActivityForResult(callInsertValue, GET_NEW_VALUE);
-
-        AddValueFragment fragment = new AddValueFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, fragment).commit();
+        DialogFragment addDialog = new AddValueFragment();
+        addDialog.show(getSupportFragmentManager(), getString(R.string.add_value_fragment_tag));
     }
 
     @Override
@@ -66,7 +63,6 @@ public class Overview extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
     @Override
@@ -87,14 +83,12 @@ public class Overview extends AppCompatActivity {
                         + " on " + newValue.getCategory() + " on " + newValue.getDate();
                 textView.setText(message);
             }
-
         }
     }
 
     /* called after user press view button */
     public void changeToWalletView(View view) {
         Intent walletViewIntent = new Intent(this, ViewValues.class);
-        //walletViewIntent.putExtra(EXTRA_MESSAGE, valuesAdded);
         startActivity(walletViewIntent);
     }
 
@@ -124,5 +118,12 @@ public class Overview extends AppCompatActivity {
             }
         }
         return sum;
+    }
+
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        WalletValue newValue = valuesAdded.get(valuesAdded.size()-1);
+        String message = getString(R.string.added) + " " + newValue.getValue()
+                + " on " + newValue.getCategory() + " on " + newValue.getDate();
+        textView.setText(message);
     }
 }

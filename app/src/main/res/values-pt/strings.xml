@@ -4,6 +4,7 @@
     <string name="wallet_view_title">Valores Registrados</string>
     <string name="insert_value_label">Inserindo Valor</string>
     <string name="instructions">Adicione um valor para computar gastos/receitas</string>
+    <string name="category">Categoria: </string>
     <string name="edit_text_hint">Escreva aqui</string>
     <string name="button_send">Salvar</string>
     <string name="button_cancel">Cancelar</string>
@@ -12,7 +13,7 @@
     <string name="menu_add_button_label">Adiciona novo valor</string>
     <string name="income">Receita</string>
     <string name="outcome">Gasto</string>
-    <string name="added">Adicionou </string>
+    <string name="added">Valor adicionado!</string>
     <string name="no_date_input">Nenhuma data selecionada</string>
     <string name="invalid_input">Valor inválido</string>
     <string name="sign_image_label">Sinal do valor</string>
@@ -25,7 +26,7 @@
         <item>Supermercado</item>
         <item>Gasolina</item>
         <item>Contas</item>
-        <item>Entertenimento</item>
+        <item>Entretenimento</item>
         <item>Taxa de Cartão de Crédito</item>
     </string-array>
 </resources>

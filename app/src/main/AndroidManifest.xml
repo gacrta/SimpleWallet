@@ -9,10 +9,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".InsertValues"
-            android:label="@string/insert_value_label">
-        </activity>
-        <activity
             android:name=".ViewValues"
             android:label="@string/wallet_view_title" />
         <activity

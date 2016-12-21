@@ -17,22 +17,6 @@ public class ViewValues extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_values);
 
-        //Intent fromInsertValues = getIntent();
-        //String message = fromInsertValues.getStringExtra(Overview.EXTRA_MESSAGE);
-        //String data[] = message.split(Pattern.quote("|"));
-        //WalletValue allValues[] = new WalletValue[Overview.valuesAdded.size()];
-        ArrayList allValues = new ArrayList(Overview.valuesAdded);
-        //allValues = Overview.valuesAdded.toArray(allValues);
-
-        /*
-        int N = allValues.length;
-        Float data[] = new Float[N];
-        for(int i = 0; i < N; i++){
-            data[i] = allValues[i].getValue();
-        }
-
-        ArrayAdapter<Float> arrayAdapter = new ArrayAdapter<Float>(this, android.R.layout.simple_list_item_1, data);
-        */
         WalletValuesAdapter adapter = new WalletValuesAdapter(this, R.layout.list_wallet_values, Overview.valuesAdded);
 
         walletListView = (ListView) findViewById(R.id.wallet_list_view);
