@@ -1,6 +1,5 @@
 package com.example.carteirasimples;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -68,7 +67,7 @@ public class AddValueFragment extends DialogFragment {
                         String selectedCategory = (String) categories.getSelectedItem();
 
                         WalletValue newValue = new WalletValue(floatValueAdded, selectedCategory, dateOfValue, sign);
-                        callerActivity.valuesAdded.add(newValue);
+                        Overview.valuesAdded.add(newValue);
 
                         mListener.onDialogPositiveClick(AddValueFragment.this);
 

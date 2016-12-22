@@ -2,6 +2,9 @@ package com.example.carteirasimples;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,9 +19,9 @@ import java.util.List;
 
 public class Overview extends AppCompatActivity implements AddValueFragment.AddValueListener {
 
-    static final int GET_NEW_VALUE = 1; //request code for new value
     static List<WalletValue> valuesAdded;
     TextView textView;
+    Handler mHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +29,27 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         setContentView(R.layout.activity_overview);
         textView = (TextView) findViewById(R.id.show_value_added);
         valuesAdded = new ArrayList<WalletValue>();
+        updateSummary();
+        
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message inputMessage) {
+                WalletValue newValue = (WalletValue) inputMessage.obj;
+                switch (inputMessage.what){
+                    case 1:
+                        String message = getString(R.string.added) + " " + newValue.getValue()
+                                + " on " + newValue.getCategory() + " on " + newValue.getDate();
+                        textView.setText(message);
+                        updateSummary();
+                        break;
+                    default:
+                        super.handleMessage(inputMessage);
+                }
+            }
+        };
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    protected void updateSummary() {
         float income = getIncomeSum();
         float outcome = getOutcomeSum();
         float balance = income - outcome;
@@ -72,20 +91,6 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         return true;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //Check requestCode
-        if (requestCode == GET_NEW_VALUE) {
-            // Check if request was sucessful
-            if (resultCode == RESULT_OK) {
-                WalletValue newValue = valuesAdded.get(valuesAdded.size()-1);
-                String message = getString(R.string.added) + " " + newValue.getValue()
-                        + " on " + newValue.getCategory() + " on " + newValue.getDate();
-                textView.setText(message);
-            }
-        }
-    }
-
     /* called after user press view button */
     public void changeToWalletView(View view) {
         Intent walletViewIntent = new Intent(this, ViewValues.class);
@@ -122,8 +127,7 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
 
     public void onDialogPositiveClick(DialogFragment dialog) {
         WalletValue newValue = valuesAdded.get(valuesAdded.size()-1);
-        String message = getString(R.string.added) + " " + newValue.getValue()
-                + " on " + newValue.getCategory() + " on " + newValue.getDate();
-        textView.setText(message);
+        Message message = mHandler.obtainMessage(1, newValue);
+        mHandler.sendMessage(message);
     }
 }
