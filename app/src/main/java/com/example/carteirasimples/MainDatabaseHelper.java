@@ -10,12 +10,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MainDatabaseHelper extends SQLiteOpenHelper {
     private static final String DBNAME = "wallet_values.db";
-    private static final String SQL_CREATE_MAIN = "CREATE_TABLE " +
-            "main " +
-            "(" +
-            " _ID INTEGER PRIMARY KEY, " +
-            " WORD TEXT FREQUENCY INTEGER " +
-            " LOCATE TEXT )";
+    private static final String SQL_CREATE = "CREATE_TABLE " +
+            WalletValuesContract.WalletItens.TABLE_NAME +
+            " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            WalletValuesContract.WalletItens.COLUMN_VALUE + " TEXT UNIQUE NOT NULL, " +
+            WalletValuesContract.WalletItens.COLUMN_CATEGORY + " TEXT UNIQUE NOT NULL, " +
+            WalletValuesContract.WalletItens.COLUMN_DATE + " TEXT UNIQUE NOT NULL, " +
+            WalletValuesContract.WalletItens.COLUMN_SIGN + " INTEGER UNIQUE NOT NULL);";
 
     public MainDatabaseHelper(Context context){
         super(context, DBNAME, null, 1);
@@ -23,7 +24,7 @@ public class MainDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_MAIN);
+        db.execSQL(SQL_CREATE);
     }
 
     @Override

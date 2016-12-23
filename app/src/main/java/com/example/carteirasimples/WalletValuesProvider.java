@@ -13,14 +13,17 @@ import android.net.Uri;
 public class WalletValuesProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private MainDatabaseHelper mOpenHelper;
+    private static final int WALLET_VALUE = 1;
+    private static final int WALLET_VALUE_ID = 2;
 
     static {
-        sUriMatcher.addURI("com.example.carteirasimples", "table1", 1);
-        sUriMatcher.addURI("com.example.carteirasimples", "table1/#", 2);
+        sUriMatcher.addURI(WalletValuesContract.CONTENT_AUTHORITY, WalletValuesContract.WalletItens.TABLE_NAME, WALLET_VALUE);
+        sUriMatcher.addURI("com.example.carteirasimples", WalletValuesContract.WalletItens.TABLE_NAME.concat("/#"), WALLET_VALUE_ID);
     }
 
     @Override
     public boolean onCreate() {
+        mOpenHelper = new MainDatabaseHelper(getContext());
         //TODO implemente onCreate()
         return false;
     }
