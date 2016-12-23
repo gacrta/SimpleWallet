@@ -21,6 +21,16 @@
             </intent-filter>
 
         </activity>
+        <provider
+            android:authorities="com.example.carteirasimples.walletvaluesdatabase"
+            android:name=".WalletValuesProvider"
+            android:grantUriPermissions="true"
+            android:exported="false"
+            android:label="WalletValuesProvider"
+            android:enabled="true"
+
+            android:permission="com.example.carteirasimples.walletvaluesdatabase.permission.READ_WRITE">
+        </provider>
     </application>
 
 </manifest>

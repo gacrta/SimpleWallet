@@ -31,8 +31,12 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         valuesAdded = new ArrayList<WalletValue>();
         updateSummary();
         String test = WalletValuesContract.WalletItens.CONTENT_ITEM_TYPE;
+        test = WalletValuesContract.BASE_CONTENT_URI.toString();
         test = WalletValuesContract.WalletItens.CONTENT_TYPE;
         test = WalletValuesContract.WalletItens.CONTENT_URI.toString();
+        test = WalletValuesContract.WalletItens.PROJECTION_ALL.toString();
+
+        WalletValuesProvider walletValuesProvider = new WalletValuesProvider();
         
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
