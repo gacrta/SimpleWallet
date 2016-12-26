@@ -40,7 +40,7 @@ public final class WalletValuesContract {
         public static final String COLUMN_SIGN = "Sign";
 
         public static final String[] PROJECTION_ALL =
-                { _ID, COLUMN_VALUE, COLUMN_CATEGORY, COLUMN_DATE};
+                { _ID, COLUMN_VALUE, COLUMN_CATEGORY, COLUMN_DATE, COLUMN_SIGN};
 
         public static final String SORT_ORDER_DEFAULT =
                 _ID + " ASC";

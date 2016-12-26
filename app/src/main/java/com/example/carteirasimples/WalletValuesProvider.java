@@ -7,7 +7,6 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 import java.util.regex.Pattern;
@@ -53,7 +52,7 @@ public class WalletValuesProvider extends ContentProvider {
             String[] selectionArgs,
             String sortOrder) {
 
-        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final SQLiteDatabase db = mOpenHelper.getReadableDatabase();
         Cursor retCursor;
         switch (sUriMatcher.match(uri)){
             case WALLET_VALUE:

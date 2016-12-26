@@ -1,7 +1,10 @@
 package com.example.carteirasimples;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -22,6 +25,7 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
     static List<WalletValue> valuesAdded;
     TextView textView;
     Handler mHandler;
+    private static final Uri CONTENT_URI = WalletValuesContract.WalletItens.CONTENT_URI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +33,8 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         setContentView(R.layout.activity_overview);
         textView = (TextView) findViewById(R.id.show_value_added);
         valuesAdded = new ArrayList<WalletValue>();
+        readWalletValuesDatabase();
         updateSummary();
-        String test = WalletValuesContract.WalletItens.CONTENT_ITEM_TYPE;
-        test = WalletValuesContract.BASE_CONTENT_URI.toString();
-        test = WalletValuesContract.WalletItens.CONTENT_TYPE;
-        test = WalletValuesContract.WalletItens.CONTENT_URI.toString();
-        test = WalletValuesContract.WalletItens.PROJECTION_ALL.toString();
-
-        WalletValuesProvider walletValuesProvider = new WalletValuesProvider();
         
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -134,7 +132,34 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
 
     public void onDialogPositiveClick(DialogFragment dialog) {
         WalletValue newValue = valuesAdded.get(valuesAdded.size()-1);
-        Message message = mHandler.obtainMessage(1, newValue);
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(WalletValuesContract.WalletItens.COLUMN_VALUE, Float.toString(newValue.getValue()));
+        contentValues.put(WalletValuesContract.WalletItens.COLUMN_CATEGORY, newValue.getCategory());
+        contentValues.put(WalletValuesContract.WalletItens.COLUMN_DATE, newValue.getDate());
+        contentValues.put(WalletValuesContract.WalletItens.COLUMN_SIGN, Boolean.toString(newValue.getSign()));
+        Uri uri = getContentResolver().insert(CONTENT_URI, contentValues);
+
+        Message message = mHandler.obtainMessage(1,newValue);
         mHandler.sendMessage(message);
+    }
+
+    public void readWalletValuesDatabase() {
+        Cursor cursor = getContentResolver().query(CONTENT_URI, WalletValuesContract.WalletItens.PROJECTION_ALL, null, null, null);
+        try {
+            cursor.moveToFirst();
+            WalletValue newValue;
+            while (!cursor.isAfterLast()) {
+                String strValue = cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_VALUE));
+                String strCategory = cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_CATEGORY));
+                String strDate = cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_DATE));
+                String strSign = cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_SIGN));
+                newValue = new WalletValue(Float.parseFloat(strValue), strCategory, strDate, Boolean.parseBoolean(strSign));
+                valuesAdded.add(newValue);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        } catch (NullPointerException e) {
+        }
     }
 }
