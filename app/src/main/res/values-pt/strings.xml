@@ -11,6 +11,7 @@
     <string name="button_view">Visualizar</string>
     <string name="button_date">Data </string>
     <string name="menu_add_button_label">Adiciona novo valor</string>
+    <string name="menu_to_dollar_button_label">Muda para valor em dólar</string>
     <string name="income">Receita</string>
     <string name="outcome">Gasto</string>
     <string name="added">Valor adicionado!</string>
