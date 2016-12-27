@@ -1,18 +1,13 @@
 package com.example.carteirasimples;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,8 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.regex.Pattern;
+import java.text.NumberFormat;
+import java.text.ParseException;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -30,6 +25,8 @@ public class ViewValues extends AppCompatActivity {
     ListView walletListView;
     private static final String currencyURL =
             "https://openexchangerates.org/api/latest.json?app_id=101bdb4a779b4ad7b0584069b8fd323b&currencies.json";
+    private Float brlValue = null;
+    private boolean[] isDollarValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,38 +37,40 @@ public class ViewValues extends AppCompatActivity {
 
         walletListView = (ListView) findViewById(R.id.wallet_list_view);
         walletListView.setAdapter(adapter);
-        
-
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_wallet_view, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_to_dollar:
-                changeToDollar();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        walletListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                CurrencyAsyncTask runner = new CurrencyAsyncTask(view, i);
+                runner.execute(currencyURL, Integer.toString(i));
+            }
+        });
+        int N = Overview.valuesAdded.size();
+        isDollarValue = new boolean[N];
+        for (int i = 0; i < N; i++) {
+            isDollarValue[i] = false;
         }
-    }
 
-    private void changeToDollar() {
-        CurrencyAsyncTask runner = new CurrencyAsyncTask();
-        runner.execute(currencyURL);
+
     }
 
     private class CurrencyAsyncTask extends AsyncTask<String, Void, String> {
         private static final String TAG = "AsyncTask";
+        private View itemClicked;
+        private int positionOfItemClicked;
+
+        public CurrencyAsyncTask(View v, int position) {
+            super();
+            itemClicked = v;
+            positionOfItemClicked = position;
+        }
+
         @Override
         protected String doInBackground(String... urls) {
             String result = null;
-            if(!isCancelled() && urls != null && urls.length > 0) {
+            if (brlValue != null) {
+                result = brlValue.toString();
+            }
+            else if(!isCancelled() && urls != null && urls.length > 0) {
                 String strUrl = urls[0];
                 try {
                     URL url = new URL(strUrl);
@@ -142,13 +141,40 @@ public class ViewValues extends AppCompatActivity {
             return result;
         }
 
+        private void changeItemValue() {
+            TextView valueToDollar = (TextView) itemClicked.findViewById(R.id.tv_value);
+            NumberFormat nf = NumberFormat.getNumberInstance(java.util.Locale.getDefault());
+            java.text.DecimalFormat df = (java.text.DecimalFormat) nf;
+            df.applyPattern("##.00");
+            float f;
+            if (!isDollarValue[positionOfItemClicked]) {
+                try {
+                    f = df.parse(valueToDollar.getText().toString().substring(2)).floatValue();
+                } catch (ParseException e) {
+                    Log.v(TAG, "Cannot parse value");
+                    return;
+                }
+                String newValue = "$"+df.format(f / brlValue);
+                valueToDollar.setText(newValue);
+                isDollarValue[positionOfItemClicked] = true;
+            }
+            else {
+                try {
+                    f = df.parse(valueToDollar.getText().toString().substring(1)).floatValue();
+                } catch (ParseException e) {
+                    Log.v(TAG, "Cannot parse value");
+                    return;
+                }
+                String newValue = "R$"+df.format(f * brlValue);
+                valueToDollar.setText(newValue);
+                isDollarValue[positionOfItemClicked] = false;
+            }
+        }
+
         @Override
         protected void onPostExecute(String currencyValue) {
-            //float brlCurrency = Float.parseFloat(currencyValue);
-            Toast.makeText(getBaseContext(), "BRL = " + currencyValue,
-            Toast.LENGTH_LONG).show();
-
-
+            brlValue = Float.parseFloat(currencyValue);
+            changeItemValue();
         }
     }
 

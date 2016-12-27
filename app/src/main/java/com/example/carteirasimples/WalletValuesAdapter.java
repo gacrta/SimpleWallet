@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.text.NumberFormat;
 import java.util.List;
 
 /**
@@ -39,7 +39,11 @@ public class WalletValuesAdapter extends ArrayAdapter<WalletValue> {
             TextView tvDate = (TextView) v.findViewById(R.id.tv_date);
 
             if (tvValue != null) {
-                tvValue.setText(Float.toString(walletValue.getValue()));
+                NumberFormat nf = NumberFormat.getNumberInstance(java.util.Locale.getDefault());
+                java.text.DecimalFormat df = (java.text.DecimalFormat) nf;
+                df.applyPattern("##.00");
+                String newValue = "R$"+df.format(walletValue.getValue());
+                tvValue.setText(newValue);
             }
             if (tvCategory != null) {
                 tvCategory.setText(walletValue.getCategory());
