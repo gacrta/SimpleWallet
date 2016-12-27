@@ -1,5 +1,6 @@
 package com.example.carteirasimples;
 
+import android.app.Fragment;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,6 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,7 +22,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Overview extends AppCompatActivity implements AddValueFragment.AddValueListener {
+public class Overview extends AppCompatActivity implements AddValueFragment.AddValueListener,
+        WalletOverviewFragment.ViewWalletListListener {
 
     static List<WalletValue> valuesAdded;
     TextView textView;
@@ -52,6 +55,12 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
                 }
             }
         };
+
+        if (savedInstanceState == null) {
+            WalletOverviewFragment firstFragment = new WalletOverviewFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, firstFragment).commit();
+        }
     }
 
     protected void updateSummary() {
@@ -160,6 +169,15 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
             }
             cursor.close();
         } catch (NullPointerException e) {
+            throw new NullPointerException("Not possible to read database");
         }
+    }
+
+    public void onButtonClick() {
+        WalletValuesFragment secondFragment = new WalletValuesFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, secondFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
