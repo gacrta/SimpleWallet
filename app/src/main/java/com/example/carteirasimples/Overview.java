@@ -1,6 +1,5 @@
 package com.example.carteirasimples;
 
-import android.app.Fragment;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -55,11 +54,12 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
                 }
             }
         };
-
-        if (savedInstanceState == null) {
-            WalletOverviewFragment firstFragment = new WalletOverviewFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, firstFragment).commit();
+        if (findViewById(R.id.fragment_container) != null) {
+            if (savedInstanceState == null) {
+                WalletOverviewFragment firstFragment = new WalletOverviewFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.fragment_container, firstFragment).commit();
+            }
         }
     }
 

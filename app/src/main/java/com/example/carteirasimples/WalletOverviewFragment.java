@@ -31,14 +31,19 @@ public class WalletOverviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wallet_overview, container, false);
-
         Button button = (Button) view.findViewById(R.id.hit_me_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onButtonClick();
-            }
-        });
+        if (getActivity().findViewById(R.id.fragment_container) == null) {
+            button.setVisibility(View.INVISIBLE);
+        }
+        else {
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListener.onButtonClick();
+                }
+            });
+        }
+
         return view;
     }
 
