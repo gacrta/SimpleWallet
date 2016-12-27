@@ -67,7 +67,7 @@ public class AddValueFragment extends DialogFragment {
                         String selectedCategory = (String) categories.getSelectedItem();
 
                         WalletValue newValue = new WalletValue(floatValueAdded, selectedCategory, dateOfValue, sign);
-                        Overview.valuesAdded.add(newValue);
+                        callerActivity.valuesAdded.add(newValue);
 
                         mListener.onDialogPositiveClick(AddValueFragment.this);
 

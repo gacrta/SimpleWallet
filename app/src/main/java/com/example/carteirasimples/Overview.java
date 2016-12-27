@@ -1,9 +1,7 @@
 package com.example.carteirasimples;
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,8 +13,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +21,7 @@ import java.util.List;
 public class Overview extends AppCompatActivity implements AddValueFragment.AddValueListener,
         WalletOverviewFragment.ViewWalletListListener {
 
-    static List<WalletValue> valuesAdded;
-    TextView textView;
+    List<WalletValue> valuesAdded;
     Handler mHandler;
     private static final Uri CONTENT_URI = WalletValuesContract.WalletItens.CONTENT_URI;
 
@@ -33,21 +29,15 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
-        textView = (TextView) findViewById(R.id.show_value_added);
-        valuesAdded = new ArrayList<WalletValue>();
+        valuesAdded = new ArrayList<>();
         readWalletValuesDatabase();
-        updateSummary();
         
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message inputMessage) {
-                WalletValue newValue = (WalletValue) inputMessage.obj;
                 switch (inputMessage.what){
                     case 1:
-                        String message = getString(R.string.added) + " " + newValue.getValue()
-                                + " on " + newValue.getCategory() + " on " + newValue.getDate();
-                        textView.setText(message);
-                        updateSummary();
+                        showMessage();
                         break;
                     default:
                         super.handleMessage(inputMessage);
@@ -63,23 +53,8 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         }
     }
 
-    protected void updateSummary() {
-        float income = getIncomeSum();
-        float outcome = getOutcomeSum();
-        float balance = income - outcome;
-
-        TextView tv_income = (TextView) findViewById(R.id.tv_income_value);
-        tv_income.setText(String.format(java.util.Locale.getDefault(),"%.2f", income));
-        TextView tv_outcome = (TextView) findViewById(R.id.tv_outcome_value);
-        tv_outcome.setText(String.format(java.util.Locale.getDefault(),"%.2f", outcome));
-        TextView tv_balance = (TextView) findViewById(R.id.tv_balance_value);
-        tv_balance.setText(String.format(java.util.Locale.getDefault(),"%.2f", balance));
-        if (balance < 0.0) {
-            tv_balance.setTextColor(Color.parseColor("#a00103"));
-        }
-        else {
-            tv_balance.setTextColor(Color.parseColor("#74ba48"));
-        }
+    private void showMessage() {
+        Toast.makeText(this, getString(R.string.added), Toast.LENGTH_SHORT).show();
     }
 
     public void addValue() {
@@ -103,40 +78,6 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         return true;
-    }
-
-    /* called after user press view button */
-    public void changeToWalletView(View view) {
-        Intent walletViewIntent = new Intent(this, ViewValues.class);
-        startActivity(walletViewIntent);
-    }
-
-    // function to evaluate total income
-    public float getIncomeSum() {
-        int valuesNumber = valuesAdded.size();
-        float sum = 0;
-        WalletValue walletValue;
-        for(int i = 0; i < valuesNumber; i++) {
-            walletValue = valuesAdded.get(i);
-            if (walletValue.getSign()) {
-                sum += walletValue.getValue();
-            }
-        }
-        return sum;
-    }
-
-    // function to evaluate total outcome
-    public float getOutcomeSum() {
-        int valuesNumber = valuesAdded.size();
-        float sum = 0;
-        WalletValue walletValue;
-        for(int i = 0; i < valuesNumber; i++) {
-            walletValue = valuesAdded.get(i);
-            if (!walletValue.getSign()) {
-                sum += walletValue.getValue();
-            }
-        }
-        return sum;
     }
 
     public void onDialogPositiveClick(DialogFragment dialog) {
@@ -173,8 +114,8 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         }
     }
 
-    public void onButtonClick() {
-        WalletValuesFragment secondFragment = new WalletValuesFragment();
+    public void viewWalletDetails() {
+        WalletListFragment secondFragment = new WalletListFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, secondFragment);
         transaction.addToBackStack(null);

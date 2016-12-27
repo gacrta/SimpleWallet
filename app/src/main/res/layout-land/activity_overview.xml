@@ -1,81 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_overview"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/button_to_view_values"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/button_view"
-        android:onClick="changeToWalletView"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/show_value_added"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/button_to_view_values"/>
-
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/summary_table"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/show_value_added">
-        <TableRow>
-            <TextView
-                android:id="@+id/overview_label"
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:text="@string/overview_table_label"/>
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_gravity="start"
-                android:textStyle="bold"
-                android:text="@string/overview_table_income"/>
-            <TextView
-                android:id="@+id/tv_income_value"
-                android:layout_gravity="center"
-                android:textColor="#74ba48"/> <!--green-->
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_gravity="start"
-                android:textStyle="bold"
-                android:text="@string/overview_table_outcome"/>
-            <TextView
-                android:id="@+id/tv_outcome_value"
-                android:layout_gravity="center"
-                android:textColor="#a00103"/> <!--red-->
-        </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_gravity="start"
-                android:textStyle="bold"
-                android:text="@string/overview_table_balance"/>
-            <TextView
-                android:id="@+id/tv_balance_value"
-                android:layout_gravity="center"/>
-        </TableRow>
-    </TableLayout>
     <fragment
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/fragment_wallet_list"
         android:layout_alignParentEnd="true"
-        android:name="com.example.carteirasimples.WalletValuesFragment"/>
+        android:layout_alignParentTop="true"
+        android:name="com.example.carteirasimples.WalletListFragment"/>
+
     <fragment
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/fragment_overview"
         android:layout_toStartOf="@id/fragment_wallet_list"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:name="com.example.carteirasimples.WalletOverviewFragment"/>
-
 </RelativeLayout>

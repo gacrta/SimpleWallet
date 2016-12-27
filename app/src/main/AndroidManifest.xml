@@ -10,9 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ViewValues"
-            android:label="@string/wallet_view_title" />
-        <activity
             android:name=".Overview"
             android:label="@string/overview_label">
             <intent-filter>

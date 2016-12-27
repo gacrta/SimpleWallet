@@ -2,9 +2,11 @@ package com.example.carteirasimples;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,36 +23,39 @@ import java.text.ParseException;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class ViewValues extends AppCompatActivity {
-    ListView walletListView;
+
+public class WalletListFragment extends Fragment {
     private static final String currencyURL =
             "https://openexchangerates.org/api/latest.json?app_id=101bdb4a779b4ad7b0584069b8fd323b&currencies.json";
-    private Float brlValue = null;
+
+    private ListView walletListView;
     private boolean[] isDollarValue;
+    private Float brlValue = null;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_values);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View mView = inflater.inflate(R.layout.fragment_wallet_list, container, false);
 
-        WalletValuesAdapter adapter = new WalletValuesAdapter(this, R.layout.list_wallet_values, Overview.valuesAdded);
+        Overview overview = (Overview) getActivity();
+        WalletValuesAdapter adapter = new WalletValuesAdapter(overview, R.layout.list_wallet_values, overview.valuesAdded);
 
-        walletListView = (ListView) findViewById(R.id.wallet_list_view);
+        walletListView = (ListView) mView.findViewById(R.id.wallet_list_view);
         walletListView.setAdapter(adapter);
         walletListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                CurrencyAsyncTask runner = new CurrencyAsyncTask(view, i);
+                WalletListFragment.CurrencyAsyncTask runner = new WalletListFragment.CurrencyAsyncTask(view, i);
                 runner.execute(currencyURL, Integer.toString(i));
             }
         });
-        int N = Overview.valuesAdded.size();
+        int N = overview.valuesAdded.size();
         isDollarValue = new boolean[N];
         for (int i = 0; i < N; i++) {
             isDollarValue[i] = false;
         }
 
-
+        return mView;
     }
 
     private class CurrencyAsyncTask extends AsyncTask<String, Void, String> {
@@ -177,5 +182,4 @@ public class ViewValues extends AppCompatActivity {
             changeItemValue();
         }
     }
-
 }
