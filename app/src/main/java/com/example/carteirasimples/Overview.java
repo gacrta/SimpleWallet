@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,6 +39,11 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
                 switch (inputMessage.what){
                     case 1:
                         showMessage();
+                        WalletOverviewFragment fragment = (WalletOverviewFragment) getSupportFragmentManager()
+                                .findFragmentByTag(getString(R.string.fragment_overview_tag));
+                        if(fragment != null) {
+                            fragment.updateSummary();
+                        }
                         break;
                     default:
                         super.handleMessage(inputMessage);
@@ -45,11 +51,9 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
             }
         };
         if (findViewById(R.id.fragment_container) != null) {
-            if (savedInstanceState == null) {
-                WalletOverviewFragment firstFragment = new WalletOverviewFragment();
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragment_container, firstFragment).commit();
-            }
+            WalletOverviewFragment firstFragment = new WalletOverviewFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, firstFragment, getString(R.string.fragment_overview_tag)).commit();
         }
     }
 
@@ -60,6 +64,15 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
     public void addValue() {
         DialogFragment addDialog = new AddValueFragment();
         addDialog.show(getSupportFragmentManager(), getString(R.string.add_value_fragment_tag));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        Fragment container = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (container != null) {
+            getSupportFragmentManager().beginTransaction().remove(container).commit();
+        }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -88,7 +101,7 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         contentValues.put(WalletValuesContract.WalletItens.COLUMN_CATEGORY, newValue.getCategory());
         contentValues.put(WalletValuesContract.WalletItens.COLUMN_DATE, newValue.getDate());
         contentValues.put(WalletValuesContract.WalletItens.COLUMN_SIGN, Boolean.toString(newValue.getSign()));
-        Uri uri = getContentResolver().insert(CONTENT_URI, contentValues);
+        getContentResolver().insert(CONTENT_URI, contentValues);
 
         Message message = mHandler.obtainMessage(1,newValue);
         mHandler.sendMessage(message);
@@ -117,7 +130,7 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
     public void viewWalletDetails() {
         WalletListFragment secondFragment = new WalletListFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, secondFragment);
+        transaction.replace(R.id.fragment_container, secondFragment, getString(R.string.fragment_wallet_list_tag));
         transaction.addToBackStack(null);
         transaction.commit();
     }

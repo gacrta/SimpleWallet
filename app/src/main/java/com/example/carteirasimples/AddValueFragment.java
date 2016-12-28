@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -73,6 +74,9 @@ public class AddValueFragment extends DialogFragment {
 
                         AddValueFragment.this.getDialog().dismiss();
                     }
+                    else {
+                        showMessage();
+                    }
                 }
             })
             .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
@@ -114,6 +118,9 @@ public class AddValueFragment extends DialogFragment {
         String strMonth = Integer.toString(month+1);
         String strDay = Integer.toString(day);
         return strYear+"/"+strMonth+"/"+strDay;
+    }
+    private void showMessage() {
+        Toast.makeText(getContext(), getString(R.string.invalid_input), Toast.LENGTH_SHORT).show();
     }
 
 

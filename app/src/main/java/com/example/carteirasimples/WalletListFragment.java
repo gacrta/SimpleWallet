@@ -1,5 +1,6 @@
 package com.example.carteirasimples;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,18 +30,42 @@ public class WalletListFragment extends Fragment {
             "https://openexchangerates.org/api/latest.json?app_id=101bdb4a779b4ad7b0584069b8fd323b&currencies.json";
 
     private ListView walletListView;
-    private boolean[] isDollarValue;
+    //private boolean[] isDollarValue;
     private Float brlValue = null;
+
+    public void updateWalletView(){
+        if (getActivity().findViewById(R.id.fragment_container) == null) {
+            if (walletListView.getAdapter() == null) {
+                Overview overview = (Overview) getActivity();
+                WalletValuesAdapter adapter = new WalletValuesAdapter(overview, R.layout.list_wallet_values, overview.valuesAdded);
+                walletListView.setAdapter(adapter);
+                walletListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        WalletListFragment.CurrencyAsyncTask runner = new WalletListFragment.CurrencyAsyncTask(view, i);
+                        runner.execute(currencyURL, Integer.toString(i));
+                    }
+                });
+            }
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View mView = inflater.inflate(R.layout.fragment_wallet_list, container, false);
 
+        walletListView = (ListView) mView.findViewById(R.id.wallet_list_view);
+
+        return mView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+
         Overview overview = (Overview) getActivity();
         WalletValuesAdapter adapter = new WalletValuesAdapter(overview, R.layout.list_wallet_values, overview.valuesAdded);
-
-        walletListView = (ListView) mView.findViewById(R.id.wallet_list_view);
         walletListView.setAdapter(adapter);
         walletListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -49,13 +74,6 @@ public class WalletListFragment extends Fragment {
                 runner.execute(currencyURL, Integer.toString(i));
             }
         });
-        int N = overview.valuesAdded.size();
-        isDollarValue = new boolean[N];
-        for (int i = 0; i < N; i++) {
-            isDollarValue[i] = false;
-        }
-
-        return mView;
     }
 
     private class CurrencyAsyncTask extends AsyncTask<String, Void, String> {
@@ -152,27 +170,28 @@ public class WalletListFragment extends Fragment {
             java.text.DecimalFormat df = (java.text.DecimalFormat) nf;
             df.applyPattern("##.00");
             float f;
-            if (!isDollarValue[positionOfItemClicked]) {
+            String valueToChange = valueToDollar.getText().toString();
+            if (valueToChange.substring(0,1).contentEquals("R")) {
                 try {
-                    f = df.parse(valueToDollar.getText().toString().substring(2)).floatValue();
+                    f = df.parse(valueToChange.substring(2)).floatValue();
                 } catch (ParseException e) {
                     Log.v(TAG, "Cannot parse value");
                     return;
                 }
                 String newValue = "$"+df.format(f / brlValue);
                 valueToDollar.setText(newValue);
-                isDollarValue[positionOfItemClicked] = true;
+                //isDollarValue[positionOfItemClicked] = true;
             }
             else {
                 try {
-                    f = df.parse(valueToDollar.getText().toString().substring(1)).floatValue();
+                    f = df.parse(valueToChange.substring(1)).floatValue();
                 } catch (ParseException e) {
                     Log.v(TAG, "Cannot parse value");
                     return;
                 }
                 String newValue = "R$"+df.format(f * brlValue);
                 valueToDollar.setText(newValue);
-                isDollarValue[positionOfItemClicked] = false;
+                //isDollarValue[positionOfItemClicked] = false;
             }
         }
 

@@ -46,26 +46,27 @@ public class WalletOverviewFragment extends Fragment {
                 }
             });
         }
-        updateSummary();
         return mView;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
         updateSummary();
     }
 
     // function to evaluate total income
     public float getIncomeSum() {
-        Overview overview = (Overview) getActivity();
-        int valuesNumber = overview.valuesAdded.size();
         float sum = 0;
-        WalletValue walletValue;
-        for(int i = 0; i < valuesNumber; i++) {
-            walletValue = overview.valuesAdded.get(i);
-            if (walletValue.getSign()) {
-                sum += walletValue.getValue();
+        Overview overview = (Overview) getActivity();
+        if (overview.valuesAdded != null) {
+            int valuesNumber = overview.valuesAdded.size();
+            WalletValue walletValue;
+            for(int i = 0; i < valuesNumber; i++) {
+                walletValue = overview.valuesAdded.get(i);
+                if (walletValue.getSign()) {
+                    sum += walletValue.getValue();
+                }
             }
         }
         return sum;
@@ -73,14 +74,16 @@ public class WalletOverviewFragment extends Fragment {
 
     // function to evaluate total outcome
     public float getOutcomeSum() {
-        Overview overview = (Overview) getActivity();
-        int valuesNumber = overview.valuesAdded.size();
         float sum = 0;
-        WalletValue walletValue;
-        for(int i = 0; i < valuesNumber; i++) {
-            walletValue = overview.valuesAdded.get(i);
-            if (!walletValue.getSign()) {
-                sum += walletValue.getValue();
+        Overview overview = (Overview) getActivity();
+        if (overview.valuesAdded != null) {
+            int valuesNumber = overview.valuesAdded.size();
+            WalletValue walletValue;
+            for(int i = 0; i < valuesNumber; i++) {
+                walletValue = overview.valuesAdded.get(i);
+                if (!walletValue.getSign()) {
+                    sum += walletValue.getValue();
+                }
             }
         }
         return sum;
