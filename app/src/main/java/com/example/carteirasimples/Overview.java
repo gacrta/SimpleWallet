@@ -1,6 +1,7 @@
 package com.example.carteirasimples;
 
 import android.content.ContentValues;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
@@ -8,6 +9,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -50,10 +52,19 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
                 }
             }
         };
-        if (findViewById(R.id.fragment_container) != null) {
-            WalletOverviewFragment firstFragment = new WalletOverviewFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, firstFragment, getString(R.string.fragment_overview_tag)).commit();
+        FragmentManager fm = getSupportFragmentManager();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            WalletOverviewFragment overview = new WalletOverviewFragment();
+            WalletListFragment walletList = new WalletListFragment();
+            fm.beginTransaction().replace(R.id.fragment_overview, overview,
+                    getString(R.string.fragment_overview_tag)).commit();
+            fm.beginTransaction().replace(R.id.fragment_wallet_list, walletList,
+                    getString(R.string.fragment_wallet_list_tag)).commit();
+        }
+        else {
+            WalletOverviewFragment overview = new WalletOverviewFragment();
+            fm.beginTransaction().replace(R.id.fragment_container, overview,
+                    getString(R.string.fragment_overview_tag)).commit();
         }
     }
 
@@ -68,10 +79,28 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Fragment container = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (container != null) {
-            getSupportFragmentManager().beginTransaction().remove(container).commit();
+        FragmentManager fm = getSupportFragmentManager();
+        fm.executePendingTransactions();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            WalletOverviewFragment overview = (WalletOverviewFragment) fm.findFragmentByTag(
+                    getString(R.string.fragment_overview_tag));
+            fm.beginTransaction().remove(overview).commit();
+            WalletListFragment walletList = (WalletListFragment) fm.findFragmentByTag(
+                    getString(R.string.fragment_wallet_list_tag));
+            fm.beginTransaction().remove(walletList).commit();
         }
+        else {
+            Fragment overviewContainer = fm.findFragmentById(R.id.fragment_overview);
+            Fragment walletListContainer = fm.findFragmentById(R.id.fragment_wallet_list);
+            if (walletListContainer != null) {
+                fm.popBackStack();
+                fm.beginTransaction().remove(walletListContainer).commit();
+            }
+            if (overviewContainer != null) {
+                fm.beginTransaction().remove(overviewContainer).commit();
+            }
+        }
+        fm.executePendingTransactions();
         super.onSaveInstanceState(outState);
     }
 

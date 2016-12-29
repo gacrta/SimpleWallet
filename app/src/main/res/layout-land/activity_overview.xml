@@ -6,20 +6,16 @@
     android:baselineAligned="false"
     android:orientation="horizontal">
 
-    <fragment
-        android:name="com.example.carteirasimples.WalletOverviewFragment"
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:id="@+id/fragment_overview"
-        android:tag="@string/fragment_overview_tag"/>
+        android:id="@+id/fragment_overview"/>
 
-    <fragment
-        android:name="com.example.carteirasimples.WalletListFragment"
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:id="@+id/fragment_wallet_list"
-        android:layout_weight="2"
-        android:tag="@string/fragment_wallet_list_tag" />
+        android:layout_weight="2" />
 
 </LinearLayout>
