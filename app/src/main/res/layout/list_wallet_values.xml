@@ -1,48 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="6dp">
-    <!--Sign Image-->
-    <ImageView
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:contentDescription="@string/sign_image_label"
-        android:id="@+id/sign_image"/>
+    card_view:cardCornerRadius="4dp"
+    android:layout_margin="5dp">
 
-    <!--Value Text-->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_value"
-        android:layout_toEndOf="@id/sign_image"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textSize="22sp"
-        android:textStyle="bold"/>
+        android:layout_height="match_parent">
 
-    <!--Category Text-->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_category"
-        android:layout_toEndOf="@id/sign_image"
-        android:textSize="14sp"
-        android:layout_below="@id/tv_value"
-        android:layout_alignParentBottom="true"
-        android:maxLines="1"/>
+        <!--Sign Image-->
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:contentDescription="@string/sign_image_label"
+            android:id="@+id/sign_image"/>
 
-    <!--Date Text-->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_date"
-        android:textSize="14sp"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/tv_value"
-        android:layout_alignParentBottom="true"/>
+        <!--Value Text-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_value"
+            android:layout_toEndOf="@id/sign_image"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:textSize="22sp"
+            android:textStyle="bold"/>
 
-</RelativeLayout>
+        <!--Category Text-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_category"
+            android:layout_toEndOf="@id/sign_image"
+            android:layout_toStartOf="@+id/tv_date"
+            android:textSize="14sp"
+            android:layout_below="@id/tv_value"
+            android:layout_alignParentBottom="true"
+            android:maxLines="1"/>
+
+        <!--Date Text-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_date"
+            android:textSize="14sp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/tv_value"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
