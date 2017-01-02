@@ -7,14 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 public class WalletListFragment extends Fragment{
-    private static final String currencyURL =
-            "https://openexchangerates.org/api/latest.json?app_id=101bdb4a779b4ad7b0584069b8fd323b&currencies.json";
 
     private RecyclerView walletRecyclerView;
-    private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
 
@@ -43,7 +41,7 @@ public class WalletListFragment extends Fragment{
 
     public void updateList() {
         Overview overview = (Overview) getActivity();
-        adapter = new WalletValuesAdapter(overview.valuesAdded);
+        RecyclerView.Adapter adapter = new WalletValuesAdapter(overview.valuesAdded);
         walletRecyclerView.setAdapter(adapter);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.carteirasimples;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -16,9 +17,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -89,6 +87,7 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
     }
 
     private void showMessage() {
+        final Context context = this;
         Snackbar snackbar;
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             snackbar = Snackbar.make(findViewById(R.id.coodinator_layout),
@@ -101,16 +100,11 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         snackbar.setAction(R.string.button_cancel, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getBaseContext(), "Sorry, does nothing!", Toast.LENGTH_SHORT);
+                Toast.makeText(context, "Sorry, does nothing yet!", Toast.LENGTH_SHORT).show();
             }
         });
         snackbar.setActionTextColor(Color.RED);
         snackbar.show();
-    }
-
-    public void addValue() {
-        DialogFragment addDialog = new AddValueFragment();
-        addDialog.show(getSupportFragmentManager(), getString(R.string.add_value_fragment_tag));
     }
 
     @Override
@@ -138,24 +132,6 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         }
         fm.executePendingTransactions();
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_add_button:
-                addValue();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        return true;
     }
 
     public void onDialogPositiveClick(DialogFragment dialog) {

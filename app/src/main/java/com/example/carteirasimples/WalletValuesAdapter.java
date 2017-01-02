@@ -1,7 +1,6 @@
 package com.example.carteirasimples;
 
 import android.os.AsyncTask;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,8 +51,6 @@ public class WalletValuesAdapter extends RecyclerView.Adapter<WalletValuesAdapte
             runner.execute(currencyURL);
         }
     }
-
-
 
     public WalletValuesAdapter(List<WalletValue> objects) {
         obj = objects;
@@ -191,6 +189,10 @@ public class WalletValuesAdapter extends RecyclerView.Adapter<WalletValuesAdapte
         }
 
         private void changeItemValue() {
+            if (brlValue == null) {
+                Toast.makeText(itemClicked.getContext(), "No internet", Toast.LENGTH_SHORT).show();
+                return;
+            }
             TextView valueToDollar = (TextView) itemClicked.findViewById(R.id.tv_value);
             NumberFormat nf = NumberFormat.getNumberInstance(java.util.Locale.getDefault());
             java.text.DecimalFormat df = (java.text.DecimalFormat) nf;
@@ -204,10 +206,9 @@ public class WalletValuesAdapter extends RecyclerView.Adapter<WalletValuesAdapte
                     Log.v(TAG, "Cannot parse value");
                     return;
                 }
-                if (brlValue != null) {
-                    String newValue = "$"+df.format(f / brlValue);
-                    valueToDollar.setText(newValue);
-                }
+                String newValue = "$"+df.format(f / brlValue);
+                valueToDollar.setText(newValue);
+
 
             }
             else {
@@ -217,20 +218,16 @@ public class WalletValuesAdapter extends RecyclerView.Adapter<WalletValuesAdapte
                     Log.v(TAG, "Cannot parse value");
                     return;
                 }
-                if (brlValue != null) {
-                    String newValue = "R$"+df.format(f * brlValue);
-                    valueToDollar.setText(newValue);
-                }
+                String newValue = "R$"+df.format(f * brlValue);
+                valueToDollar.setText(newValue);
             }
         }
 
         @Override
         protected void onPostExecute(String currencyValue) {
-            if (currencyValue == null) {
-
-                return;
+            if (currencyValue != null) {
+                brlValue = Float.parseFloat(currencyValue);
             }
-            brlValue = Float.parseFloat(currencyValue);
             changeItemValue();
         }
     }
