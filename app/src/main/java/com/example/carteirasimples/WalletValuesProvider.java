@@ -85,7 +85,7 @@ public class WalletValuesProvider extends ContentProvider {
                 null, values);
         if (_id > 0) {
             Uri newUri = ContentUris.withAppendedId(uri,_id);
-            //getContext().getContentResolver().notifyChange(newUri, null);
+            getContext().getContentResolver().notifyChange(newUri, null);
             return newUri;
         }
         else {
@@ -128,10 +128,5 @@ public class WalletValuesProvider extends ContentProvider {
         }
         return rows;
     }
-
-
-
-
-
 
 }

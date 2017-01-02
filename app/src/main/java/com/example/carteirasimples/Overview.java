@@ -3,10 +3,13 @@ package com.example.carteirasimples;
 import android.content.ContentValues;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +19,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,6 +31,7 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
     List<WalletValue> valuesAdded;
     Handler mHandler;
     private static final Uri CONTENT_URI = WalletValuesContract.WalletItens.CONTENT_URI;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +46,15 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
                 switch (inputMessage.what){
                     case 1:
                         showMessage();
-                        WalletOverviewFragment fragment = (WalletOverviewFragment) getSupportFragmentManager()
+                        WalletOverviewFragment fragment1 = (WalletOverviewFragment) getSupportFragmentManager()
                                 .findFragmentByTag(getString(R.string.fragment_overview_tag));
-                        if(fragment != null) {
-                            fragment.updateSummary();
+                        if(fragment1 != null) {
+                            fragment1.updateSummary();
+                        }
+                        WalletListFragment fragment2 = (WalletListFragment) getSupportFragmentManager()
+                                .findFragmentByTag(getString(R.string.fragment_wallet_list_tag));
+                        if(fragment2 != null) {
+                            fragment2.updateList();
                         }
                         break;
                     default:
@@ -66,10 +76,36 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
             fm.beginTransaction().replace(R.id.fragment_container, overview,
                     getString(R.string.fragment_overview_tag)).commit();
         }
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment addDialog = new AddValueFragment();
+                fab.hide();
+                addDialog.show(getSupportFragmentManager(), getString(R.string.add_value_fragment_tag));
+            }
+        });
     }
 
     private void showMessage() {
-        Toast.makeText(this, getString(R.string.added), Toast.LENGTH_SHORT).show();
+        Snackbar snackbar;
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            snackbar = Snackbar.make(findViewById(R.id.coodinator_layout),
+                    getString(R.string.added), Snackbar.LENGTH_LONG);
+        }
+        else {
+            snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_land),
+                    getString(R.string.added), Snackbar.LENGTH_LONG);
+        }
+        snackbar.setAction(R.string.button_cancel, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getBaseContext(), "Sorry, does nothing!", Toast.LENGTH_SHORT);
+            }
+        });
+        snackbar.setActionTextColor(Color.RED);
+        snackbar.show();
     }
 
     public void addValue() {
@@ -136,8 +172,13 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         mHandler.sendMessage(message);
     }
 
+    public void dismissAddValueFragment() {
+        fab.show();
+    }
+
     public void readWalletValuesDatabase() {
-        Cursor cursor = getContentResolver().query(CONTENT_URI, WalletValuesContract.WalletItens.PROJECTION_ALL, null, null, null);
+        Cursor cursor = getContentResolver().query(CONTENT_URI, WalletValuesContract.WalletItens.PROJECTION_ALL, null, null,
+                WalletValuesContract.WalletItens.SORT_ORDER_DEFAULT);
         try {
             cursor.moveToFirst();
             WalletValue newValue;

@@ -1,30 +1,12 @@
 package com.example.carteirasimples;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.text.NumberFormat;
-import java.text.ParseException;
-
-import javax.net.ssl.HttpsURLConnection;
 
 
 public class WalletListFragment extends Fragment{
@@ -56,10 +38,12 @@ public class WalletListFragment extends Fragment{
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+        updateList();
+    }
 
+    public void updateList() {
         Overview overview = (Overview) getActivity();
         adapter = new WalletValuesAdapter(overview.valuesAdded);
         walletRecyclerView.setAdapter(adapter);
-
     }
 }

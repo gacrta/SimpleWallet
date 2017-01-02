@@ -24,6 +24,7 @@ public class AddValueFragment extends DialogFragment {
 
     public interface AddValueListener {
         public void onDialogPositiveClick(DialogFragment dialog);
+        public void dismissAddValueFragment();
     }
 
     // Use this instance of the interface to deliver action events
@@ -121,6 +122,12 @@ public class AddValueFragment extends DialogFragment {
     }
     private void showMessage() {
         Toast.makeText(getContext(), getString(R.string.invalid_input), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDismiss(final DialogInterface dialogInterface){
+        super.onDismiss(dialogInterface);
+        mListener.dismissAddValueFragment();
     }
 
 

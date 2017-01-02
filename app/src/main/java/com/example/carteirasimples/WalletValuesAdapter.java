@@ -1,6 +1,7 @@
 package com.example.carteirasimples;
 
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -203,9 +204,11 @@ public class WalletValuesAdapter extends RecyclerView.Adapter<WalletValuesAdapte
                     Log.v(TAG, "Cannot parse value");
                     return;
                 }
-                String newValue = "$"+df.format(f / brlValue);
-                valueToDollar.setText(newValue);
-                //isDollarValue[positionOfItemClicked] = true;
+                if (brlValue != null) {
+                    String newValue = "$"+df.format(f / brlValue);
+                    valueToDollar.setText(newValue);
+                }
+
             }
             else {
                 try {
@@ -214,13 +217,19 @@ public class WalletValuesAdapter extends RecyclerView.Adapter<WalletValuesAdapte
                     Log.v(TAG, "Cannot parse value");
                     return;
                 }
-                String newValue = "R$"+df.format(f * brlValue);
-                valueToDollar.setText(newValue);
+                if (brlValue != null) {
+                    String newValue = "R$"+df.format(f * brlValue);
+                    valueToDollar.setText(newValue);
+                }
             }
         }
 
         @Override
         protected void onPostExecute(String currencyValue) {
+            if (currencyValue == null) {
+
+                return;
+            }
             brlValue = Float.parseFloat(currencyValue);
             changeItemValue();
         }

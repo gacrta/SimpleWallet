@@ -43,7 +43,7 @@ public final class WalletValuesContract {
                 { _ID, COLUMN_VALUE, COLUMN_CATEGORY, COLUMN_DATE, COLUMN_SIGN};
 
         public static final String SORT_ORDER_DEFAULT =
-                _ID + " ASC";
+                COLUMN_DATE + " ASC";
 
         // Define a function to build a URI to find a specific walletValue by it's identifier
         public static Uri buildWalletValueUri(long id){
