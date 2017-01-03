@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/user_info"
-            android:title="Item 1" />
-            <!--app:actionLayout="@layout/user_info"/> -->
+            android:id="@+id/drawer_view_list"
+            android:title="@string/item_view_list"
+            android:icon="@drawable/ic_view_list"/>
 
+        <item
+            android:title="@string/item_show_chart"
+            android:id="@+id/drawer_show_chart"
+            android:icon="@drawable/ic_show_chart"/>
 
-    <item
-            android:title="Item 2"
-            android:id="@+id/summary_table" />
-            <!--app:actionLayout="@layout/summary_table"/> -->
-
-    <item
-            android:id="@+id/other_options"
-            android:title="Item 3" />
-            <!--app:actionLayout="@layout/other_options"/> -->
+        <item
+            android:id="@+id/drawer_info"
+            android:title="@string/item_info"
+            android:icon="@drawable/ic_info"/>
     </group>
 </menu>

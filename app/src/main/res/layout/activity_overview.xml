@@ -32,7 +32,7 @@
         android:id="@+id/navigation_drawer"
         app:headerLayout="@layout/drawer_header"
         app:menu="@menu/drawer_main"
-        android:layout_gravity="start"
-        android:background="#efede1">
+        android:background="#efede1"
+        android:layout_gravity="start">
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

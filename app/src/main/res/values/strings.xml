@@ -1,34 +1,48 @@
 <resources>
     <string name="app_name">Simple Wallet</string>
     <string name="greetings">Welcome to Simple Wallet App</string>
+    <string name="instructions">Add a value to compute incomes/outcomes</string>
+    <string name="user_name">João da Silva</string>
+    <string name="user_email">joao_da_silva@email.com</string>
+
     <string name="insert_value_label">Inserting a value</string>
     <string name="overview_label">Simple Wallet App</string>
     <string name="wallet_view_title">Registered Values</string>
-    <string name="instructions">Add a value to compute incomes/outcomes</string>
+
     <string name="category">Category: </string>
     <string name="edit_text_hint">Write here</string>
     <string name="button_send">Save</string>
     <string name="button_cancel">Cancel</string>
     <string name="button_to_wallet_list">View details</string>
     <string name="button_date">Date </string>
+
     <string name="menu_drawer">Open drawer menu</string>
     <string name="menu_drawer_open">Open drawer menu</string>
     <string name="menu_drawer_close">Close drawer menu</string>
     <string name="drawer_header_profile_image">Profile image</string>
+    <string name="item_view_list">Detail List</string>
+    <string name="item_show_chart">Graphs</string>
+    <string name="item_info">About this App</string>
+
     <string name="income">Income</string>
     <string name="outcome">Outcome</string>
+    <string name="sign_image_label">Value\'s sign</string>
+
     <string name="added">Value added!</string>
     <string name="no_date_input">No date selected</string>
     <string name="invalid_input">Invalid input</string>
-    <string name="sign_image_label">Value\'s sign</string>
+
+
     <string name="overview_table_label">Balance Summary</string>
     <string name="overview_table_income">Income Value:</string>
     <string name="overview_table_outcome">Outcome Value:</string>
     <string name="overview_table_balance">Balance:</string>
+
     <string name="add_value_fragment_tag">AddValueFragment</string>
     <string name="date_picker_fragment_tag">DatePickerFragment</string>
     <string name="fragment_overview_tag">OverviewFragment</string>
     <string name="fragment_wallet_list_tag">WalletListFragment</string>
+
     <string-array name="category_tipes">
         <item>Salary</item>
         <item>Supermarket</item>

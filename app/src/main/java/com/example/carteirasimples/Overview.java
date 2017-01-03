@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -77,6 +78,7 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 fab.hide();
+                updateSummary();
                 invalidateOptionsMenu();
             }
         };
@@ -152,9 +154,6 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-
-        //boolean drawerOpen = drawerLayout.isDrawerOpen(mDrawerList);
-        //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -198,6 +197,7 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         super.onSaveInstanceState(outState);
     }
 
+    // function that calls snackbar after a adding a new value
     private void showMessage() {
         final Context context = this;
         Snackbar snackbar;
@@ -219,6 +219,7 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         snackbar.show();
     }
 
+    // function that adds last WalletValue to Content Provider and calls showMessage
     public void onDialogPositiveClick(DialogFragment dialog) {
         WalletValue newValue = valuesAdded.get(valuesAdded.size()-1);
 
@@ -233,10 +234,12 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         mHandler.sendMessage(message);
     }
 
+    // function that shows fab after addValueFragment ends
     public void dismissAddValueFragment() {
         fab.show();
     }
 
+    // function that populates savedValues array based on content provider
     public void readWalletValuesDatabase() {
         Cursor cursor = getContentResolver().query(CONTENT_URI, WalletValuesContract.WalletItens.PROJECTION_ALL, null, null,
                 WalletValuesContract.WalletItens.SORT_ORDER_DEFAULT);
@@ -264,5 +267,57 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         transaction.replace(R.id.fragment_container, secondFragment, getString(R.string.fragment_wallet_list_tag));
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    // function to evaluate total income
+    public float getIncomeSum() {
+        float sum = 0;
+        if (valuesAdded != null) {
+            int valuesNumber = valuesAdded.size();
+            WalletValue walletValue;
+            for(int i = 0; i < valuesNumber; i++) {
+                walletValue = valuesAdded.get(i);
+                if (walletValue.getSign()) {
+                    sum += walletValue.getValue();
+                }
+            }
+        }
+        return sum;
+    }
+
+    // function to evaluate total outcome
+    public float getOutcomeSum() {
+        float sum = 0;
+        if (valuesAdded != null) {
+            int valuesNumber = valuesAdded.size();
+            WalletValue walletValue;
+            for(int i = 0; i < valuesNumber; i++) {
+                walletValue = valuesAdded.get(i);
+                if (!walletValue.getSign()) {
+                    sum += walletValue.getValue();
+                }
+            }
+        }
+        return sum;
+    }
+
+    // function that evaluates balance and put values on textViews
+    protected void updateSummary() {
+        float income = getIncomeSum();
+        float outcome = getOutcomeSum();
+        float balance = income - outcome;
+
+        TextView tv_income = (TextView) navigationView.findViewById(R.id.tv_income_value);
+        tv_income.setText(String.format(java.util.Locale.getDefault(),"%.2f", income));
+        TextView tv_outcome = (TextView) navigationView.findViewById(R.id.tv_outcome_value);
+        tv_outcome.setText(String.format(java.util.Locale.getDefault(),"%.2f", outcome));
+        TextView tv_balance = (TextView) navigationView.findViewById(R.id.tv_balance_value);
+        tv_balance.setText(String.format(java.util.Locale.getDefault(),"%.2f", balance));
+        if (balance < 0.0) {
+            tv_balance.setTextColor(Color.parseColor("#a00103"));
+        }
+        else {
+            tv_balance.setTextColor(Color.parseColor("#74ba48"));
+        }
     }
 }
