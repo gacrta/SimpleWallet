@@ -10,13 +10,18 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -30,6 +35,9 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
     Handler mHandler;
     private static final Uri CONTENT_URI = WalletValuesContract.WalletItens.CONTENT_URI;
     FloatingActionButton fab;
+    private NavigationView navigationView;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle abt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +45,47 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         setContentView(R.layout.activity_overview);
         valuesAdded = new ArrayList<>();
         readWalletValuesDatabase();
-        
+
+        navigationView = (NavigationView) findViewById(R.id.navigation_drawer);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                if (item.isChecked()) item.setChecked(false);
+                else item.setChecked(true);
+                drawerLayout.closeDrawers();
+
+                switch (item.getItemId()) {
+                    default:
+                        return true;
+                }
+            }
+        });
+
+        abt = new ActionBarDrawerToggle(
+                this, drawerLayout,
+                R.string.menu_drawer_open, R.string.menu_drawer_close){
+
+            @Override
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                fab.show();
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                fab.hide();
+                invalidateOptionsMenu();
+            }
+        };
+
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        drawerLayout.addDrawerListener(abt);
+
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message inputMessage) {
@@ -60,6 +108,7 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
                 }
             }
         };
+
         FragmentManager fm = getSupportFragmentManager();
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             WalletOverviewFragment overview = new WalletOverviewFragment();
@@ -86,25 +135,40 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         });
     }
 
-    private void showMessage() {
-        final Context context = this;
-        Snackbar snackbar;
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            snackbar = Snackbar.make(findViewById(R.id.coodinator_layout),
-                    getString(R.string.added), Snackbar.LENGTH_LONG);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+        //noinspection SimplifiableIfStatement
+        if (abt.onOptionsItemSelected(item)) {
+            return true;
         }
-        else {
-            snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_land),
-                    getString(R.string.added), Snackbar.LENGTH_LONG);
-        }
-        snackbar.setAction(R.string.button_cancel, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context, "Sorry, does nothing yet!", Toast.LENGTH_SHORT).show();
-            }
-        });
-        snackbar.setActionTextColor(Color.RED);
-        snackbar.show();
+        return super.onOptionsItemSelected(item);
+    }
+
+    /* Called whenever we call invalidateOptionsMenu() */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+
+        //boolean drawerOpen = drawerLayout.isDrawerOpen(mDrawerList);
+        //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        abt.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        abt.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -132,6 +196,27 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         }
         fm.executePendingTransactions();
         super.onSaveInstanceState(outState);
+    }
+
+    private void showMessage() {
+        final Context context = this;
+        Snackbar snackbar;
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            snackbar = Snackbar.make(findViewById(R.id.drawer_layout),
+                    getString(R.string.added), Snackbar.LENGTH_LONG);
+        }
+        else {
+            snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_land),
+                    getString(R.string.added), Snackbar.LENGTH_LONG);
+        }
+        snackbar.setAction(R.string.button_cancel, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "Sorry, does nothing yet!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        snackbar.setActionTextColor(Color.RED);
+        snackbar.show();
     }
 
     public void onDialogPositiveClick(DialogFragment dialog) {

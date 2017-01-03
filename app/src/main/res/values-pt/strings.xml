@@ -11,7 +11,10 @@
     <string name="button_cancel">Cancelar</string>
     <string name="button_to_wallet_list">Visualizar detalhes</string>
     <string name="button_date">Data </string>
-    <string name="menu_add_button_label">Adiciona novo valor</string>
+    <string name="menu_drawer">Abrir menu</string>
+    <string name="menu_drawer_open">Abrir menu</string>
+    <string name="menu_drawer_close">Fechar menu</string>
+    <string name="drawer_header_profile_image">Imagem de Perfil</string>
     <string name="income">Receita</string>
     <string name="outcome">Gasto</string>
     <string name="added">Valor adicionado!</string>

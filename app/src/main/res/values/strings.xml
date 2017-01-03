@@ -11,8 +11,10 @@
     <string name="button_cancel">Cancel</string>
     <string name="button_to_wallet_list">View details</string>
     <string name="button_date">Date </string>
-    <string name="menu_add_button_label">Add new value</string>
-    <string name="menu_to_dollar_button_label">Change to dollar</string>
+    <string name="menu_drawer">Open drawer menu</string>
+    <string name="menu_drawer_open">Open drawer menu</string>
+    <string name="menu_drawer_close">Close drawer menu</string>
+    <string name="drawer_header_profile_image">Profile image</string>
     <string name="income">Income</string>
     <string name="outcome">Outcome</string>
     <string name="added">Value added!</string>
