@@ -3,9 +3,20 @@
     <string name="overview_label">App Carteira Simples</string>
     <string name="greetings">Bem-vindo ao App Carteira Simples</string>
     <string name="instructions">Adicione um valor para computar gastos/receitas</string>
-    <string name="wallet_view_title">Valores Registrados</string>
+    <string name="simple_wallet_icon">Icone Carteira Simples</string>
+    <string name="not_implemented">Desculpe, não implementado ainda!</string>
+    <string name="app_info">O App Carteira Simples foi criado por um desenvolvedor
+        Android iniciante como ferramenta de aprendizado da plataforma. Ele será
+        (muito) modificado. </string>
 
-    <string name="insert_value_label">Inserindo Valor</string>
+    <string name="insert_value_title">Inserindo Valor</string>
+    <string name="main_activity_title">App Carteira Simples</string>
+    <string-array name="fragments_titles">
+        <item>Valores Registrados</item>
+        <item>Gráficos e Figuras</item>
+        <item>Sobre o App</item>
+    </string-array>
+
     <string name="category">Categoria: </string>
     <string name="edit_text_hint">Escreva aqui</string>
     <string name="button_send">Salvar</string>

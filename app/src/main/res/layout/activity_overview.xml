@@ -8,7 +8,8 @@
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/coordinator_layout">
 
         <FrameLayout
             android:id="@+id/fragment_container"
@@ -26,7 +27,7 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
-        android:layout_width="230dp"
+        android:layout_width="@dimen/drawer_width"
         android:layout_height="match_parent"
         android:layout_marginStart="@dimen/activity_vertical_margin"
         android:id="@+id/navigation_drawer"

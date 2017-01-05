@@ -4,10 +4,19 @@
     <string name="instructions">Add a value to compute incomes/outcomes</string>
     <string name="user_name">João da Silva</string>
     <string name="user_email">joao_da_silva@email.com</string>
+    <string name="simple_wallet_icon">Simple Wallet Icon</string>
+    <string name="not_implemented">Sorry, not implemented yet!</string>
+    <string name="app_info">The Simple Wallet App was made by a beginner Android
+        developer as learning tool of the platform. It will change (a lot).</string>
 
-    <string name="insert_value_label">Inserting a value</string>
-    <string name="overview_label">Simple Wallet App</string>
-    <string name="wallet_view_title">Registered Values</string>
+
+    <string name="insert_value_title">Inserting a value</string>
+    <string name="main_activity_title">Simple Wallet App</string>
+    <string-array name="fragments_titles">
+        <item>Registered Values</item>
+        <item>Graphs and figures</item>
+        <item>About this App</item>
+    </string-array>
 
     <string name="category">Category: </string>
     <string name="edit_text_hint">Write here</string>
@@ -42,6 +51,9 @@
     <string name="date_picker_fragment_tag">DatePickerFragment</string>
     <string name="fragment_overview_tag">OverviewFragment</string>
     <string name="fragment_wallet_list_tag">WalletListFragment</string>
+    <string name="fragment_greetings_tag">GreetingsFragment</string>
+    <string name="fragment_chart_tag">ChartFragment</string>
+    <string name="fragment_app_info_tag">AppInfoFragment</string>
 
     <string-array name="category_tipes">
         <item>Salary</item>
@@ -51,4 +63,5 @@
         <item>Entertainment</item>
         <item>Credit Card Fee</item>
     </string-array>
+
 </resources>

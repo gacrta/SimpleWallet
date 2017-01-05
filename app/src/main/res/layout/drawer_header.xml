@@ -70,7 +70,8 @@
             <TextView
                 android:id="@+id/tv_income_value"
                 android:layout_gravity="center"
-                android:textColor="#74ba48"/> <!--green-->
+                android:textColor="#74ba48"
+                android:text=""/> <!--green-->
         </TableRow>
         <TableRow>
             <TextView

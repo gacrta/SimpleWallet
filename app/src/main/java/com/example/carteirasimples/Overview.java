@@ -13,9 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,16 +27,21 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Overview extends AppCompatActivity implements AddValueFragment.AddValueListener,
-        WalletOverviewFragment.ViewWalletListListener {
+public class Overview extends AppCompatActivity implements AddValueFragment.AddValueListener{
+
+    private static final Uri CONTENT_URI = WalletValuesContract.WalletItens.CONTENT_URI;
+    private static final String SELECTED_ITEM = "item";
+    private static final int WALLET_VIEW_ID = 0;
+    private static final int CHART_VIEW_ID = 1;
+    private static final int INFO_VIEW_ID = 2;
 
     List<WalletValue> valuesAdded;
-    Handler mHandler;
-    private static final Uri CONTENT_URI = WalletValuesContract.WalletItens.CONTENT_URI;
-    FloatingActionButton fab;
+    private Handler mHandler;
+    private FloatingActionButton fab;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle abt;
+    private String[] fragmentsTitles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,47 +49,108 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         setContentView(R.layout.activity_overview);
         valuesAdded = new ArrayList<>();
         readWalletValuesDatabase();
-
-        navigationView = (NavigationView) findViewById(R.id.navigation_drawer);
+        fragmentsTitles = getResources().getStringArray(R.array.fragments_titles);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.navigation_drawer);
+        
+        if(drawerLayout != null) {
+            // we are at portrait mode
+
+            abt = new ActionBarDrawerToggle(
+                    this, drawerLayout,
+                    R.string.menu_drawer_open, R.string.menu_drawer_close){
+
+                @Override
+                public void onDrawerClosed(View view) {
+                    super.onDrawerClosed(view);
+                    fab.show();
+                    changeActionBarTitle();
+                    invalidateOptionsMenu();
+                }
+
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    fab.hide();
+                    updateSummary();
+                    getSupportActionBar().setTitle(R.string.main_activity_title);
+                    invalidateOptionsMenu();
+                }
+            };
+
+            drawerLayout.addDrawerListener(abt);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        else {
+            updateSummary();
+        }
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 if (item.isChecked()) item.setChecked(false);
                 else item.setChecked(true);
-                drawerLayout.closeDrawers();
+                if (drawerLayout != null)
+                    drawerLayout.closeDrawers();
 
+                int idView = R.id.fragment_container;
                 switch (item.getItemId()) {
+                    case R.id.drawer_view_list:
+                        WalletListFragment wlf = new WalletListFragment();
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(idView, wlf, getString(R.string.fragment_wallet_list_tag)).commit();
+                        getSupportActionBar().setTitle(fragmentsTitles[WALLET_VIEW_ID]);
+                        break;
+                    case R.id.drawer_show_chart:
+                        ChartsFragment cf = new ChartsFragment();
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(idView, cf, getString(R.string.fragment_chart_tag)).commit();
+                        getSupportActionBar().setTitle(fragmentsTitles[CHART_VIEW_ID]);
+                        break;
+                    case R.id.drawer_info:
+                        AppInfoFragment aif = new AppInfoFragment();
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(idView, aif, getString(R.string.fragment_app_info_tag)).commit();
+                        getSupportActionBar().setTitle(fragmentsTitles[INFO_VIEW_ID]);
+                        break;
                     default:
-                        return true;
+                        return false;
                 }
+                return true;
             }
         });
 
-        abt = new ActionBarDrawerToggle(
-                this, drawerLayout,
-                R.string.menu_drawer_open, R.string.menu_drawer_close){
+        if (savedInstanceState == null) {
+            FragmentManager fm = getSupportFragmentManager();
+            GreetingsFragment greetings = new GreetingsFragment();
+            fm.beginTransaction().replace(R.id.fragment_container, greetings,
+                    getString(R.string.fragment_greetings_tag)).commit();
+        }
 
-            @Override
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                fab.show();
-                invalidateOptionsMenu();
+        else {
+            int selectedItem = savedInstanceState.getInt(SELECTED_ITEM);
+            switch (selectedItem) {
+                case WALLET_VIEW_ID:
+                    WalletListFragment wlf = new WalletListFragment();
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, wlf, getString(R.string.fragment_wallet_list_tag)).commit();
+                    getSupportActionBar().setTitle(fragmentsTitles[WALLET_VIEW_ID]);
+                    break;
+                case CHART_VIEW_ID:
+                    ChartsFragment cf = new ChartsFragment();
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, cf, getString(R.string.fragment_chart_tag)).commit();
+                    getSupportActionBar().setTitle(fragmentsTitles[CHART_VIEW_ID]);
+                    break;
+                case INFO_VIEW_ID:
+                    AppInfoFragment aif = new AppInfoFragment();
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, aif, getString(R.string.fragment_app_info_tag)).commit();
+                    getSupportActionBar().setTitle(fragmentsTitles[INFO_VIEW_ID]);
+                    break;
             }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                fab.hide();
-                updateSummary();
-                invalidateOptionsMenu();
-            }
-        };
-
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        drawerLayout.addDrawerListener(abt);
+        }
 
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -94,11 +158,7 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
                 switch (inputMessage.what){
                     case 1:
                         showMessage();
-                        WalletOverviewFragment fragment1 = (WalletOverviewFragment) getSupportFragmentManager()
-                                .findFragmentByTag(getString(R.string.fragment_overview_tag));
-                        if(fragment1 != null) {
-                            fragment1.updateSummary();
-                        }
+                        updateSummary();
                         WalletListFragment fragment2 = (WalletListFragment) getSupportFragmentManager()
                                 .findFragmentByTag(getString(R.string.fragment_wallet_list_tag));
                         if(fragment2 != null) {
@@ -110,21 +170,6 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
                 }
             }
         };
-
-        FragmentManager fm = getSupportFragmentManager();
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            WalletOverviewFragment overview = new WalletOverviewFragment();
-            WalletListFragment walletList = new WalletListFragment();
-            fm.beginTransaction().replace(R.id.fragment_overview, overview,
-                    getString(R.string.fragment_overview_tag)).commit();
-            fm.beginTransaction().replace(R.id.fragment_wallet_list, walletList,
-                    getString(R.string.fragment_wallet_list_tag)).commit();
-        }
-        else {
-            WalletOverviewFragment overview = new WalletOverviewFragment();
-            fm.beginTransaction().replace(R.id.fragment_container, overview,
-                    getString(R.string.fragment_overview_tag)).commit();
-        }
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -143,10 +188,13 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-        //noinspection SimplifiableIfStatement
-        if (abt.onOptionsItemSelected(item)) {
-            return true;
+        if (findViewById(R.id.drawer_layout) != null) {
+            //noinspection SimplifiableIfStatement
+            if (abt.onOptionsItemSelected(item)) {
+                return true;
+            }
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -161,7 +209,10 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        abt.syncState();
+        if(findViewById(R.id.drawer_layout) != null) {
+            abt.syncState();
+        }
+
     }
 
     @Override
@@ -172,6 +223,7 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        /*
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -193,22 +245,41 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
                 fm.beginTransaction().remove(overviewContainer).commit();
             }
         }
-        fm.executePendingTransactions();
+        //fm.executePendingTransactions();
+        */
+        int fragId = 0;
+        if (getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_wallet_list_tag)) != null) {
+            fragId = WALLET_VIEW_ID;
+        }
+        else if (getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_chart_tag)) != null) {
+            fragId = CHART_VIEW_ID;
+        }
+        else if (getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_app_info_tag)) != null) {
+            fragId = INFO_VIEW_ID;
+        }
+
+        outState.putInt(SELECTED_ITEM, fragId);
         super.onSaveInstanceState(outState);
+    }
+
+    private void changeActionBarTitle() {
+        if (getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_wallet_list_tag)) != null) {
+            getSupportActionBar().setTitle(fragmentsTitles[WALLET_VIEW_ID]);
+        }
+        else if (getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_chart_tag)) != null) {
+            getSupportActionBar().setTitle(fragmentsTitles[CHART_VIEW_ID]);
+        }
+        else if (getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_app_info_tag)) != null) {
+            getSupportActionBar().setTitle(fragmentsTitles[INFO_VIEW_ID]);
+        }
     }
 
     // function that calls snackbar after a adding a new value
     private void showMessage() {
         final Context context = this;
-        Snackbar snackbar;
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            snackbar = Snackbar.make(findViewById(R.id.drawer_layout),
-                    getString(R.string.added), Snackbar.LENGTH_LONG);
-        }
-        else {
-            snackbar = Snackbar.make(findViewById(R.id.coordinator_layout_land),
-                    getString(R.string.added), Snackbar.LENGTH_LONG);
-        }
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_layout),
+                getString(R.string.added), Snackbar.LENGTH_LONG);
+
         snackbar.setAction(R.string.button_cancel, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -261,14 +332,6 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         }
     }
 
-    public void viewWalletDetails() {
-        WalletListFragment secondFragment = new WalletListFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, secondFragment, getString(R.string.fragment_wallet_list_tag));
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
-
     // function to evaluate total income
     public float getIncomeSum() {
         float sum = 0;
@@ -307,11 +370,11 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         float outcome = getOutcomeSum();
         float balance = income - outcome;
 
-        TextView tv_income = (TextView) navigationView.findViewById(R.id.tv_income_value);
+        TextView tv_income = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_income_value);
         tv_income.setText(String.format(java.util.Locale.getDefault(),"%.2f", income));
-        TextView tv_outcome = (TextView) navigationView.findViewById(R.id.tv_outcome_value);
+        TextView tv_outcome = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_outcome_value);
         tv_outcome.setText(String.format(java.util.Locale.getDefault(),"%.2f", outcome));
-        TextView tv_balance = (TextView) navigationView.findViewById(R.id.tv_balance_value);
+        TextView tv_balance = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_balance_value);
         tv_balance.setText(String.format(java.util.Locale.getDefault(),"%.2f", balance));
         if (balance < 0.0) {
             tv_balance.setTextColor(Color.parseColor("#a00103"));

@@ -23,8 +23,8 @@ public class AddValueFragment extends DialogFragment {
     TextView selectedDate;
 
     public interface AddValueListener {
-        public void onDialogPositiveClick(DialogFragment dialog);
-        public void dismissAddValueFragment();
+        void onDialogPositiveClick(DialogFragment dialog);
+        void dismissAddValueFragment();
     }
 
     // Use this instance of the interface to deliver action events
@@ -86,7 +86,7 @@ public class AddValueFragment extends DialogFragment {
                     AddValueFragment.this.getDialog().cancel();
                 }
             })
-            .setTitle(R.string.insert_value_label)
+            .setTitle(R.string.insert_value_title)
                 .setView(view);
 
         categories = (Spinner) view.findViewById(R.id.add_value_spinner_category);
