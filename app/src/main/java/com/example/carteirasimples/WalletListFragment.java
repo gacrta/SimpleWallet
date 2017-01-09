@@ -1,7 +1,11 @@
 package com.example.carteirasimples;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +18,7 @@ public class WalletListFragment extends Fragment{
 
     private RecyclerView walletRecyclerView;
     private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView.Adapter adapter;
 
 
     @Override
@@ -29,6 +34,7 @@ public class WalletListFragment extends Fragment{
         //using linear layout manager
         layoutManager = new LinearLayoutManager(getContext());
         walletRecyclerView.setLayoutManager(layoutManager);
+        ((Overview)getActivity()).initWalletListDB();
 
         return mView;
     }
@@ -36,12 +42,13 @@ public class WalletListFragment extends Fragment{
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        updateList();
     }
 
-    public void updateList() {
-        Overview overview = (Overview) getActivity();
-        RecyclerView.Adapter adapter = new WalletValuesAdapter(overview.valuesAdded);
+    public WalletValuesAdapter getAdapter() {
+        return (WalletValuesAdapter) walletRecyclerView.getAdapter();
+    }
+    public void setAdapter() {
+        adapter = new WalletValuesAdapter();
         walletRecyclerView.setAdapter(adapter);
     }
 }

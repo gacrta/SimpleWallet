@@ -1,5 +1,7 @@
 package com.example.carteirasimples;
 
+import android.database.Cursor;
+
 /**
  * Created by gabriel.almeida on 19/12/2016.
  */
@@ -10,8 +12,6 @@ public class WalletValue {
     private String date;
     private boolean sign;   //sign == true represents income
 
-    public WalletValue() { }
-
     public WalletValue(float value, String category, String date, boolean sign) {
         this.value = value;
         this.category = category;
@@ -19,9 +19,14 @@ public class WalletValue {
         this.sign = sign;
     }
 
-    public float getValue() {
-        return value;
+    public WalletValue(Cursor cursor){
+        value = Float.parseFloat(cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_VALUE)));
+        category = cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_CATEGORY));
+        date = cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_DATE));
+        sign = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_SIGN)));
     }
+
+    public float getValue() { return value; }
 
     public String getDate() { return date; }
 

@@ -14,26 +14,38 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Overview extends AppCompatActivity implements AddValueFragment.AddValueListener{
+public class Overview extends AppCompatActivity implements AddValueFragment.AddValueListener,
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final Uri CONTENT_URI = WalletValuesContract.WalletItens.CONTENT_URI;
     private static final String SELECTED_ITEM = "item";
     private static final int WALLET_VIEW_ID = 0;
     private static final int CHART_VIEW_ID = 1;
     private static final int INFO_VIEW_ID = 2;
+    private static final int ID_FULL_TABLE = 0;
+    private static final int ID_INCOMES = 1;
+    private static final int ID_OUTCOMES = 2;
+    private static final String[] income = {"true"};
+    private static final String[] outcome = {"false"};
 
     List<WalletValue> valuesAdded;
     private Handler mHandler;
@@ -48,10 +60,12 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
         valuesAdded = new ArrayList<>();
-        readWalletValuesDatabase();
         fragmentsTitles = getResources().getStringArray(R.array.fragments_titles);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navigation_drawer);
+        getSupportLoaderManager().initLoader(ID_INCOMES, null, this);
+        getSupportLoaderManager().initLoader(ID_OUTCOMES, null, this);
+
         
         if(drawerLayout != null) {
             // we are at portrait mode
@@ -101,6 +115,7 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
                         getSupportFragmentManager().beginTransaction()
                                 .replace(idView, wlf, getString(R.string.fragment_wallet_list_tag)).commit();
                         getSupportActionBar().setTitle(fragmentsTitles[WALLET_VIEW_ID]);
+                        //initWalletListDB();
                         break;
                     case R.id.drawer_show_chart:
                         ChartsFragment cf = new ChartsFragment();
@@ -136,6 +151,7 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, wlf, getString(R.string.fragment_wallet_list_tag)).commit();
                     getSupportActionBar().setTitle(fragmentsTitles[WALLET_VIEW_ID]);
+                    //initWalletListDB();
                     break;
                 case CHART_VIEW_ID:
                     ChartsFragment cf = new ChartsFragment();
@@ -159,11 +175,6 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
                     case 1:
                         showMessage();
                         updateSummary();
-                        WalletListFragment fragment2 = (WalletListFragment) getSupportFragmentManager()
-                                .findFragmentByTag(getString(R.string.fragment_wallet_list_tag));
-                        if(fragment2 != null) {
-                            fragment2.updateList();
-                        }
                         break;
                     default:
                         super.handleMessage(inputMessage);
@@ -223,30 +234,6 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        /*
-        FragmentManager fm = getSupportFragmentManager();
-        fm.executePendingTransactions();
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            WalletOverviewFragment overview = (WalletOverviewFragment) fm.findFragmentByTag(
-                    getString(R.string.fragment_overview_tag));
-            fm.beginTransaction().remove(overview).commit();
-            WalletListFragment walletList = (WalletListFragment) fm.findFragmentByTag(
-                    getString(R.string.fragment_wallet_list_tag));
-            fm.beginTransaction().remove(walletList).commit();
-        }
-        else {
-            Fragment overviewContainer = fm.findFragmentById(R.id.fragment_overview);
-            Fragment walletListContainer = fm.findFragmentById(R.id.fragment_wallet_list);
-            if (walletListContainer != null) {
-                fm.popBackStack();
-                fm.beginTransaction().remove(walletListContainer).commit();
-            }
-            if (overviewContainer != null) {
-                fm.beginTransaction().remove(overviewContainer).commit();
-            }
-        }
-        //fm.executePendingTransactions();
-        */
         int fragId = 0;
         if (getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_wallet_list_tag)) != null) {
             fragId = WALLET_VIEW_ID;
@@ -310,6 +297,76 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         fab.show();
     }
 
+    // function to initWalletListDB
+    public void initWalletListDB(){
+        getSupportLoaderManager().initLoader(ID_FULL_TABLE, null, this);
+    }
+
+    /* - LoaderManager.LoaderCallbacks functions - */
+
+
+    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+        String[] value = {WalletValuesContract.WalletItens.COLUMN_VALUE};
+        String selection = WalletValuesContract.WalletItens.COLUMN_SIGN + " = ?";
+        switch (id) {
+            case ID_FULL_TABLE:
+                return new CursorLoader(this,
+                        CONTENT_URI, WalletValuesContract.WalletItens.PROJECTION_ALL,
+                        null, null,
+                        WalletValuesContract.WalletItens.SORT_ORDER_DEFAULT);
+            case ID_INCOMES:
+
+                return new CursorLoader(this,
+                        CONTENT_URI, value,
+                        selection, income, null);
+            case ID_OUTCOMES:
+                return new CursorLoader(this,
+                        CONTENT_URI, value,
+                        selection, outcome, null);
+            default:
+                return null;
+        }
+    }
+
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        float sum;
+        int id = cursorLoader.getId();
+        WalletListFragment listFrag;
+        switch (id) {
+            case ID_FULL_TABLE:
+                listFrag = (WalletListFragment) getSupportFragmentManager()
+                    .findFragmentByTag(getString(R.string.fragment_wallet_list_tag));
+                if(listFrag.getAdapter() == null) {
+                    listFrag.setAdapter();
+                }
+                listFrag.getAdapter().swapCursor(cursor);
+                break;
+            case ID_INCOMES:
+                sum = getSum(cursor);
+                TextView tv_income = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_income_value);
+                tv_income.setText(String.format(java.util.Locale.getDefault(),"%.2f", sum));
+                updateSummary();
+                break;
+            case ID_OUTCOMES:
+                sum = getSum(cursor);
+                TextView tv_outcome = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_outcome_value);
+                tv_outcome.setText(String.format(java.util.Locale.getDefault(),"%.2f", sum));
+                updateSummary();
+                break;
+        }
+    }
+
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        switch (cursorLoader.getId()){
+            case ID_FULL_TABLE:
+                if ((getSupportFragmentManager()
+                        .findFragmentByTag(getString(R.string.fragment_wallet_list_tag))) != null)
+                ((WalletListFragment)getSupportFragmentManager()
+                        .findFragmentByTag(getString(R.string.fragment_wallet_list_tag)))
+                        .getAdapter().swapCursor(null);
+        }
+    }
+
     // function that populates savedValues array based on content provider
     public void readWalletValuesDatabase() {
         Cursor cursor = getContentResolver().query(CONTENT_URI, WalletValuesContract.WalletItens.PROJECTION_ALL, null, null,
@@ -332,55 +389,50 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         }
     }
 
-    // function to evaluate total income
-    public float getIncomeSum() {
+    public float getSum(Cursor cursor) {
         float sum = 0;
-        if (valuesAdded != null) {
-            int valuesNumber = valuesAdded.size();
-            WalletValue walletValue;
-            for(int i = 0; i < valuesNumber; i++) {
-                walletValue = valuesAdded.get(i);
-                if (walletValue.getSign()) {
-                    sum += walletValue.getValue();
-                }
-            }
-        }
-        return sum;
-    }
-
-    // function to evaluate total outcome
-    public float getOutcomeSum() {
-        float sum = 0;
-        if (valuesAdded != null) {
-            int valuesNumber = valuesAdded.size();
-            WalletValue walletValue;
-            for(int i = 0; i < valuesNumber; i++) {
-                walletValue = valuesAdded.get(i);
-                if (!walletValue.getSign()) {
-                    sum += walletValue.getValue();
-                }
-            }
+        float currValue;
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            currValue = Float.parseFloat(cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_VALUE)));
+            sum += currValue;
+            cursor.moveToNext();
         }
         return sum;
     }
 
     // function that evaluates balance and put values on textViews
     protected void updateSummary() {
-        float income = getIncomeSum();
-        float outcome = getOutcomeSum();
-        float balance = income - outcome;
+        String incString = ((TextView) navigationView.getHeaderView(0)
+                .findViewById(R.id.tv_income_value)).getText().toString();
+        String outString = ((TextView) navigationView.getHeaderView(0)
+                .findViewById(R.id.tv_outcome_value)).getText().toString();
 
-        TextView tv_income = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_income_value);
-        tv_income.setText(String.format(java.util.Locale.getDefault(),"%.2f", income));
-        TextView tv_outcome = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_outcome_value);
-        tv_outcome.setText(String.format(java.util.Locale.getDefault(),"%.2f", outcome));
-        TextView tv_balance = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_balance_value);
-        tv_balance.setText(String.format(java.util.Locale.getDefault(),"%.2f", balance));
-        if (balance < 0.0) {
-            tv_balance.setTextColor(Color.parseColor("#a00103"));
-        }
-        else {
-            tv_balance.setTextColor(Color.parseColor("#74ba48"));
+        NumberFormat nf = NumberFormat.getNumberInstance(java.util.Locale.getDefault());
+        java.text.DecimalFormat df = (java.text.DecimalFormat) nf;
+        df.applyPattern("##.00");
+
+        if (!incString.isEmpty() && !outString.isEmpty()) {
+            float inc;
+            float out;
+
+            try {
+                inc = df.parse(incString).floatValue();
+                out = df.parse(outString).floatValue();
+            } catch (ParseException e) {
+                Log.v("UPDATE_SUMMARY", "Cannot parse value");
+                return;
+            }
+            float balance = inc - out;
+
+            TextView tv_balance = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_balance_value);
+            tv_balance.setText(String.format(java.util.Locale.getDefault(),"%.2f", balance));
+            if (balance < 0.0) {
+                tv_balance.setTextColor(Color.parseColor("#a00103"));
+            }
+            else {
+                tv_balance.setTextColor(Color.parseColor("#74ba48"));
+            }
         }
     }
 }

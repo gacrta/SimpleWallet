@@ -1,5 +1,6 @@
 package com.example.carteirasimples;
 
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,7 +29,7 @@ import javax.net.ssl.HttpsURLConnection;
  */
 
 public class WalletValuesAdapter extends RecyclerView.Adapter<WalletValuesAdapter.ViewHolder> {
-    private List<WalletValue> obj;
+    private Cursor cursor;
     private static final String currencyURL =
             "https://openexchangerates.org/api/latest.json?app_id=101bdb4a779b4ad7b0584069b8fd323b&currencies.json";
 
@@ -52,13 +53,37 @@ public class WalletValuesAdapter extends RecyclerView.Adapter<WalletValuesAdapte
         }
     }
 
-    public WalletValuesAdapter(List<WalletValue> objects) {
-        obj = objects;
+    public WalletValuesAdapter() {
+        cursor = null;
+        setHasStableIds(true);
+    }
+
+    public void swapCursor(Cursor newCursor){
+        if (this.cursor == newCursor) {
+            return;
+        }
+        if (newCursor != null) {
+            notifyDataSetChanged();
+            this.cursor = newCursor;
+        }
+        else {
+            notifyItemRangeRemoved(0, getItemCount());
+            cursor = null;
+        }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if (!cursor.moveToPosition(position)) {
+            throw new IllegalStateException("Could not move cursor to position " + position + " when trying to get an item id");
+        }
+
+        return cursor.getLong(cursor.getColumnIndexOrThrow("_id"));
     }
 
     @Override
     public WalletValuesAdapter.ViewHolder onCreateViewHolder (ViewGroup parent,
-                                                              int viewTipe) {
+                                                              int viewType) {
         //create new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_wallet_values, parent, false);
@@ -68,8 +93,14 @@ public class WalletValuesAdapter extends RecyclerView.Adapter<WalletValuesAdapte
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
+        if (!cursor.moveToPosition(position)) {
+            throw new IllegalStateException("Could not move cursor to position " + position + " when trying to bind viewholder");
+        }
+
         //get new item
-        WalletValue walletValue = obj.get(position);
+        WalletValue walletValue = new WalletValue(cursor);
+        //WalletValue walletValue = new WalletValue((float )0.0, "test", "0/0", true);
 
         // set value
         NumberFormat nf = NumberFormat.getNumberInstance(java.util.Locale.getDefault());
@@ -93,10 +124,13 @@ public class WalletValuesAdapter extends RecyclerView.Adapter<WalletValuesAdapte
         holder.tvDate.setText(walletValue.getDate());
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
+    // Return the size of your data set (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return obj.size();
+        if (cursor != null) {
+            return cursor.getCount();
+        }
+        return 0;
     }
 
 
@@ -208,8 +242,6 @@ public class WalletValuesAdapter extends RecyclerView.Adapter<WalletValuesAdapte
                 }
                 String newValue = "$"+df.format(f / brlValue);
                 valueToDollar.setText(newValue);
-
-
             }
             else {
                 try {
