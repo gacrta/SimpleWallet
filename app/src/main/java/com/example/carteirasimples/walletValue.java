@@ -9,10 +9,10 @@ import android.database.Cursor;
 public class WalletValue {
     private float value;
     private String category;
-    private String date;
+    private long date;
     private boolean sign;   //sign == true represents income
 
-    public WalletValue(float value, String category, String date, boolean sign) {
+    public WalletValue(float value, String category, long date, boolean sign) {
         this.value = value;
         this.category = category;
         this.date = date;
@@ -22,13 +22,13 @@ public class WalletValue {
     public WalletValue(Cursor cursor){
         value = Float.parseFloat(cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_VALUE)));
         category = cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_CATEGORY));
-        date = cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_DATE));
+        date = cursor.getLong(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_DATE));
         sign = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_SIGN)));
     }
 
     public float getValue() { return value; }
 
-    public String getDate() { return date; }
+    public long getDate() { return date; }
 
     public String getCategory() { return category; }
 
@@ -42,7 +42,7 @@ public class WalletValue {
         this.category = category;
     }
 
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
     }
 

@@ -66,7 +66,12 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         getSupportLoaderManager().initLoader(ID_INCOMES, null, this);
         getSupportLoaderManager().initLoader(ID_OUTCOMES, null, this);
 
-        
+        String[] pA = {"1"};
+        Cursor c = getContentResolver().query(CONTENT_URI,
+                null, "_id = ?", pA, null);
+        c.moveToFirst();
+        long l = c.getLong(c.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_DATE));
+
         if(drawerLayout != null) {
             // we are at portrait mode
 
@@ -364,28 +369,6 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
                 ((WalletListFragment)getSupportFragmentManager()
                         .findFragmentByTag(getString(R.string.fragment_wallet_list_tag)))
                         .getAdapter().swapCursor(null);
-        }
-    }
-
-    // function that populates savedValues array based on content provider
-    public void readWalletValuesDatabase() {
-        Cursor cursor = getContentResolver().query(CONTENT_URI, WalletValuesContract.WalletItens.PROJECTION_ALL, null, null,
-                WalletValuesContract.WalletItens.SORT_ORDER_DEFAULT);
-        try {
-            cursor.moveToFirst();
-            WalletValue newValue;
-            while (!cursor.isAfterLast()) {
-                String strValue = cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_VALUE));
-                String strCategory = cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_CATEGORY));
-                String strDate = cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_DATE));
-                String strSign = cursor.getString(cursor.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_SIGN));
-                newValue = new WalletValue(Float.parseFloat(strValue), strCategory, strDate, Boolean.parseBoolean(strSign));
-                valuesAdded.add(newValue);
-                cursor.moveToNext();
-            }
-            cursor.close();
-        } catch (NullPointerException e) {
-            throw new NullPointerException("Not possible to read database");
         }
     }
 

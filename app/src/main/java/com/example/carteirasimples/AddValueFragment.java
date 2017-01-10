@@ -14,7 +14,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class AddValueFragment extends DialogFragment {
@@ -67,8 +71,16 @@ public class AddValueFragment extends DialogFragment {
                         TextView dateView = (TextView) view.findViewById(R.id.add_value_tv_show_selected_date);
                         String dateOfValue = dateView.getText().toString();
                         String selectedCategory = (String) categories.getSelectedItem();
+                        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+                        long date;
+                        try {
+                            date = dateFormat.parse(dateOfValue).getTime();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            date = System.currentTimeMillis();
+                        }
 
-                        WalletValue newValue = new WalletValue(floatValueAdded, selectedCategory, dateOfValue, sign);
+                        WalletValue newValue = new WalletValue(floatValueAdded, selectedCategory, date, sign);
                         callerActivity.valuesAdded.add(newValue);
 
                         mListener.onDialogPositiveClick(AddValueFragment.this);
@@ -103,23 +115,16 @@ public class AddValueFragment extends DialogFragment {
             }
         });
 
-        final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
+        final Calendar c = Calendar.getInstance(Locale.getDefault());
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+        String s = dateFormat.format(new Date(c.getTimeInMillis()));
 
         selectedDate = (TextView) view.findViewById(R.id.add_value_tv_show_selected_date);
-        selectedDate.setText(writeDateString(year, month, day));
+        selectedDate.setText(s);
 
         return builder.create();
     }
 
-    String writeDateString(int year, int month, int day) {
-        String strYear = Integer.toString(year);
-        String strMonth = Integer.toString(month+1);
-        String strDay = Integer.toString(day);
-        return strYear+"/"+strMonth+"/"+strDay;
-    }
     private void showMessage() {
         Toast.makeText(getContext(), getString(R.string.invalid_input), Toast.LENGTH_SHORT).show();
     }
@@ -129,7 +134,5 @@ public class AddValueFragment extends DialogFragment {
         super.onDismiss(dialogInterface);
         mListener.dismissAddValueFragment();
     }
-
-
 
 }

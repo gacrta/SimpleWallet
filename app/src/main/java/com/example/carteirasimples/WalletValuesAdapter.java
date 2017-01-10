@@ -18,9 +18,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.List;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -121,7 +123,8 @@ public class WalletValuesAdapter extends RecyclerView.Adapter<WalletValuesAdapte
         holder.tvCategory.setText(walletValue.getCategory());
 
         //set date
-        holder.tvDate.setText(walletValue.getDate());
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+        holder.tvDate.setText(dateFormat.format(new Date(walletValue.getDate())));
     }
 
     // Return the size of your data set (invoked by the layout manager)
