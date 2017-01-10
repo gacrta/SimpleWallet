@@ -49,48 +49,56 @@
         android:id="@+id/summary_table"
         android:layout_alignParentStart="true"
         android:layout_below="@id/user_email"
-        android:gravity="start"
         android:background="#d0d0d0"
         android:paddingEnd="3dp"
-        android:paddingStart="3dp">
+        android:paddingStart="3dp"
+        android:stretchColumns="0,1">
         <TableRow>
             <TextView
                 android:id="@+id/overview_label"
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
+                android:layout_width="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
                 android:textStyle="bold"
                 android:textSize="18sp"
                 android:text="@string/overview_table_label"/>
         </TableRow>
         <TableRow>
             <TextView
+                android:layout_width="0dp"
                 android:layout_gravity="start"
                 android:textStyle="bold"
                 android:text="@string/overview_table_income"/>
             <TextView
                 android:id="@+id/tv_income_value"
-                android:layout_gravity="center"
+                android:layout_marginEnd="3dp"
+                android:layout_width="0dp"
+                android:layout_gravity="end"
                 android:textColor="#74ba48"
                 android:text=""/> <!--green-->
         </TableRow>
         <TableRow>
             <TextView
+                android:layout_width="0dp"
                 android:layout_gravity="start"
                 android:textStyle="bold"
                 android:text="@string/overview_table_outcome"/>
             <TextView
+                android:layout_width="0dp"
                 android:id="@+id/tv_outcome_value"
-                android:layout_gravity="center"
+                android:layout_gravity="end"
                 android:textColor="#a00103"/> <!--red-->
         </TableRow>
         <TableRow>
             <TextView
+                android:layout_width="0dp"
                 android:layout_gravity="start"
                 android:textStyle="bold"
                 android:text="@string/overview_table_balance"/>
             <TextView
+                android:layout_width="0dp"
                 android:id="@+id/tv_balance_value"
-                android:layout_gravity="center"/>
+                android:layout_gravity="end" />
         </TableRow>
     </TableLayout>
 
