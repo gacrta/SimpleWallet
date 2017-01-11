@@ -66,12 +66,6 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         getSupportLoaderManager().initLoader(ID_INCOMES, null, this);
         getSupportLoaderManager().initLoader(ID_OUTCOMES, null, this);
 
-        String[] pA = {"1"};
-        Cursor c = getContentResolver().query(CONTENT_URI,
-                null, "_id = ?", pA, null);
-        c.moveToFirst();
-        long l = c.getLong(c.getColumnIndex(WalletValuesContract.WalletItens.COLUMN_DATE));
-
         if(drawerLayout != null) {
             // we are at portrait mode
 
@@ -141,38 +135,6 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
             }
         });
 
-        if (savedInstanceState == null) {
-            FragmentManager fm = getSupportFragmentManager();
-            GreetingsFragment greetings = new GreetingsFragment();
-            fm.beginTransaction().replace(R.id.fragment_container, greetings,
-                    getString(R.string.fragment_greetings_tag)).commit();
-        }
-
-        else {
-            int selectedItem = savedInstanceState.getInt(SELECTED_ITEM);
-            switch (selectedItem) {
-                case WALLET_VIEW_ID:
-                    WalletListFragment wlf = new WalletListFragment();
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, wlf, getString(R.string.fragment_wallet_list_tag)).commit();
-                    getSupportActionBar().setTitle(fragmentsTitles[WALLET_VIEW_ID]);
-                    //initWalletListDB();
-                    break;
-                case CHART_VIEW_ID:
-                    ChartsFragment cf = new ChartsFragment();
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, cf, getString(R.string.fragment_chart_tag)).commit();
-                    getSupportActionBar().setTitle(fragmentsTitles[CHART_VIEW_ID]);
-                    break;
-                case INFO_VIEW_ID:
-                    AppInfoFragment aif = new AppInfoFragment();
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, aif, getString(R.string.fragment_app_info_tag)).commit();
-                    getSupportActionBar().setTitle(fragmentsTitles[INFO_VIEW_ID]);
-                    break;
-            }
-        }
-
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message inputMessage) {
@@ -227,6 +189,38 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
         // Sync the toggle state after onRestoreInstanceState has occurred.
         if(findViewById(R.id.drawer_layout) != null) {
             abt.syncState();
+        }
+
+        if (savedInstanceState == null) {
+            FragmentManager fm = getSupportFragmentManager();
+            GreetingsFragment greetings = new GreetingsFragment();
+            fm.beginTransaction().replace(R.id.fragment_container, greetings,
+                    getString(R.string.fragment_greetings_tag)).commit();
+        }
+
+        else {
+            int selectedItem = savedInstanceState.getInt(SELECTED_ITEM);
+            switch (selectedItem) {
+                case WALLET_VIEW_ID:
+                    WalletListFragment wlf = new WalletListFragment();
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, wlf, getString(R.string.fragment_wallet_list_tag)).commit();
+                    getSupportActionBar().setTitle(fragmentsTitles[WALLET_VIEW_ID]);
+                    //initWalletListDB();
+                    break;
+                case CHART_VIEW_ID:
+                    ChartsFragment cf = new ChartsFragment();
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, cf, getString(R.string.fragment_chart_tag)).commit();
+                    getSupportActionBar().setTitle(fragmentsTitles[CHART_VIEW_ID]);
+                    break;
+                case INFO_VIEW_ID:
+                    AppInfoFragment aif = new AppInfoFragment();
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, aif, getString(R.string.fragment_app_info_tag)).commit();
+                    getSupportActionBar().setTitle(fragmentsTitles[INFO_VIEW_ID]);
+                    break;
+            }
         }
 
     }
@@ -308,7 +302,6 @@ public class Overview extends AppCompatActivity implements AddValueFragment.AddV
     }
 
     /* - LoaderManager.LoaderCallbacks functions - */
-
 
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
         String[] value = {WalletValuesContract.WalletItens.COLUMN_VALUE};

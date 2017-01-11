@@ -102,7 +102,6 @@ public class WalletValuesAdapter extends RecyclerView.Adapter<WalletValuesAdapte
 
         //get new item
         WalletValue walletValue = new WalletValue(cursor);
-        //WalletValue walletValue = new WalletValue((float )0.0, "test", "0/0", true);
 
         // set value
         NumberFormat nf = NumberFormat.getNumberInstance(java.util.Locale.getDefault());
